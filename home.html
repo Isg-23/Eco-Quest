@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eco-Quest 🌱 - Save Our Planet!</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #2d5016;
+            overflow-x: hidden;
+        }
+
+        .floating-elements {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .leaf, .cloud, .star {
+            position: absolute;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .leaf {
+            font-size: 24px;
+            color: #4CAF50;
+            animation-delay: 0s;
+        }
+
+        .cloud {
+            font-size: 32px;
+            color: rgba(255, 255, 255, 0.7);
+            animation-delay: -2s;
+        }
+
+        .star {
+            font-size: 16px;
+            color: #FFD700;
+            animation-delay: -4s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        header {
+            background: linear-gradient(135deg, #2E8B57, #228B22);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo::before {
+            content: "🌍";
+            animation: spin 4s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            font-weight: bold;
+        }
+
+        nav a:hover {
+            background: rgba(255,255,255,0.2);
+            transform: translateY(-2px);
+        }
+
+        .user-stats {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: linear-gradient(135deg, #4CAF50, #8BC34A);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="trees" patternUnits="userSpaceOnUse" width="20" height="20"><text x="2" y="15" font-size="12" fill="rgba(255,255,255,0.1)">🌲</text></pattern></defs><rect width="100" height="100" fill="url(%23trees)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            animation: bounce 2s ease-in-out infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: bold;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+        }
+
+        .cta-button:active {
+            transform: translateY(-1px) scale(1.02);
+        }
+
+        .section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #2E7D32;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .quest-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .quest-card {
+            background: linear-gradient(145deg, #ffffff, #f0f8f0);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            border: 3px solid #E8F5E8;
+        }
+
+        .quest-card::before {
+            content: "";
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(76, 175, 80, 0.1) 0%, transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .quest-card:hover::before {
+            opacity: 1;
+        }
+
+        .quest-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            border-color: #4CAF50;
+        }
+
+        .quest-icon {
+            font-size: 3rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .quest-card h3 {
+            color: #2E7D32;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .quest-card p {
+            color: #555;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .quest-button {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quest-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .quest-button:hover::before {
+            left: 100%;
+        }
+
+        .quest-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .difficulty {
+            display: inline-block;
+            background: #FFE082;
+            color: #F57F17;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .profile-container {
+            background: linear-gradient(145deg, #ffffff, #f0f8f0);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .badges-container {
+            margin-top: 2rem;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+
+        .badge {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            transform: scale(1.05);
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-name {
+            font-size: 0.8rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .badge.locked {
+            opacity: 0.5;
+            background: #f5f5f5;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #ffffff, #f0f8f0);
+            margin: 5% auto;
+            padding: 2rem;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .close:hover {
+            color: #000;
+        }
+
+        .game-area {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        .recycling-bins {
+            display: flex;
+            justify-content: space-around;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .bin {
+            width: 100px;
+            height: 120px;
+            border: 3px dashed #ccc;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .bin.highlight {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .bin-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bin-label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .draggable-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
+        .draggable-item {
+            background: white;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            padding: 1rem;
+            cursor: grab;
+            transition: all 0.3s ease;
+            font-size: 1.5rem;
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .draggable-item:hover {
+            transform: scale(1.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .quest-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .recycling-bins {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); background: #4CAF50; }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: success 0.5s ease-in-out;
+        }
+
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .confetti {
+            position: absolute;
+            font-size: 20px;
+            animation: confetti-fall 3s ease-in-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(300px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: loading-spin 1s ease-in-out infinite;
+        }
+
+        @keyframes loading-spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-elements">
+        <div class="leaf" style="left: 10%; top: 20%;">🍃</div>
+        <div class="cloud" style="left: 80%; top: 15%;">☁️</div>
+        <div class="leaf" style="left: 70%; top: 60%;">🌿</div>
+        <div class="star" style="left: 20%; top: 70%;">⭐</div>
+        <div class="cloud" style="left: 40%; top: 80%;">☁️</div>
+        <div class="leaf" style="left: 90%; top: 40%;">🍃</div>
+    </div>
+
+    <header>
+        <div class="nav-container">
+            <div class="logo">Eco-Quest</div>
+            <nav>
+                <ul>
+                    <li><a href="#home" onclick="showSection('home')">🏠 Home</a></li>
+                    <li><a href="#quests" onclick="showSection('quests')">🎮 Quests</a></li>
+                    <li><a href="#learn" onclick="showSection('learn')">📚 Learn</a></li>
+                    <li><a href="#profile" onclick="showSection('profile')">👤 Profile</a></li>
+                </ul>
+            </nav>
+            <div class="user-stats">
+                <span>🌟 <span id="total-points">0</span> Eco-Points</span>
+            </div>
+        </div>
+    </header>
+
+    <section id="home" class="hero">
+        <div class="hero-content">
+            <h1>🌱 Welcome to Eco-Quest! 🌱</h1>
+            <p>Join the adventure to save our planet! Learn about nature, sustainability, and environmental protection through fun interactive quests and games.</p>
+            <button class="cta-button" onclick="startAdventure()">
+                🚀 Start Your Green Adventure!
+            </button>
+        </div>
+    </section>
+
+    <section id="quests" class="section" style="display: none;">
+        <h2>🎯 Your Eco-Missions</h2>
+        <div class="quest-grid">
+            <div class="quest-card">
+                <div class="difficulty">⭐ Beginner</div>
+                <div class="quest-icon">♻️</div>
+                <h3>Recycling Hero</h3>
+                <p>Learn to sort different types of waste into the correct recycling bins. Help reduce pollution and save our planet!</p>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <button class="quest-button" onclick="startRecyclingGame()">Start Mission</button>
+            </div>
+            
+            <div class="quest-card">
+                <div class="difficulty">⭐⭐ Intermediate</div>
+                <div class="quest-icon">🌳</div>
+                <h3>Forest Guardian</h3>
+                <p>Protect the rainforest by planting trees and learning about wildlife conservation. Every tree counts!</p>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <button class="quest-button" onclick="startForestGame()">Start Mission</button>
+            </div>
+            
+            <div class="quest-card">
+                <div class="difficulty">⭐⭐⭐ Advanced</div>
+                <div class="quest-icon">☀️</div>
+                <h3>Solar City Builder</h3>
+                <p>Design and build a sustainable city powered entirely by renewable energy sources!</p>
+                <div class="progress-container">
+                    <div class="progress-bar" style="width: 0%">0%</div>
+                </div>
+                <button class="quest-button" onclick="startSolarGame()">Start Mission</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="learn" class="section" style="display: none;">
+        <h2>📖 Environmental Knowledge Hub</h2>
+        <div class="quest-grid">
+            <div class="quest-card">
+                <div class="quest-icon">🌍</div>
+                <h3>Climate Change Basics</h3>
+                <p>Discover what climate change is and how it affects our planet.</p>
+                <button class="quest-button">Learn More</button>
+            </div>
+            
+            <div class="quest-card">
+                <div class="quest-icon">🐼</div>
+                <h3>Wildlife Conservation</h3>
+                <p>Learn about endangered species and how we can protect them.</p>
+                <button class="quest-button">Learn More</button>
+            </div>
+            
+            <div class="quest-card">
+                <div class="quest-icon">🌊</div>
+                <h3>Ocean Protection</h3>
+                <p>Understand ocean pollution and marine ecosystem protection.</p>
+                <button class="quest-button">Learn More</button>
+            </div>
+        </div>
+    </section>
+
+    <section id="profile" class="section" style="display: none;">
+        <h2>🏆 Your Eco-Profile</h2>
+        <div class="profile-container">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="eco-points">0</div>
+                    <div class="stat-label">🌟 Eco-Points</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="quests-completed">0</div>
+                    <div class="stat-label">✅ Quests Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="badges-earned">0</div>
+                    <div class="stat-label">🏅 Badges Earned</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="streak-days">0</div>
+                    <div class="stat-label">🔥 Day Streak</div>
+                </div>
+            </div>
+            
+            <div class="badges-container">
+                <h3>🏅 Your Eco-Badges</h3>
+                <div class="badges-grid">
+                    <div class="badge locked" data-badge="recycling-novice">
+                        <div class="badge-icon">♻️</div>
+                        <div class="badge-name">Recycling Novice</div>
+                    </div>
+                    <div class="badge locked" data-badge="tree-planter">
+                        <div class="badge-icon">🌳</div>
+                        <div class="badge-name">Tree Planter</div>
+                    </div>
+                    <div class="badge locked" data-badge="energy-saver">
+                        <div class="badge-icon">⚡</div>
+                        <div class="badge-name">Energy Saver</div>
+                    </div>
+                    <div class="badge locked" data-badge="ocean-protector">
+                        <div class="badge-icon">🌊</div>
+                        <div class="badge-name">Ocean Protector</div>
+                    </div>
+                    <div class="badge locked" data-badge="wildlife-friend">
+                        <div class="badge-icon">🐼</div>
+                        <div class="badge-name">Wildlife Friend</div>
+                    </div>
+                    <div class="badge locked" data-badge="eco-champion">
+                        <div class="badge-icon">🏆</div>
+                        <div class="badge-name">Eco Champion</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="gameModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeGame()">&times;</span>
+            <div id="gameContent"></div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+
+    <div id="celebration" class="celebration"></div>
+
+    <script>
+        let gameState = {
+            ecoPoints: 0,
+            questsCompleted: 0,
+            badgesEarned: 0,
+            streakDays: 1,
+            unlockedBadges: [],
+            questProgress: {
+                'recycling': 0,
+                'forest': 0,
+                'solar': 0
+            }
+        };
+
+        function loadProgress() {
+            const saved = localStorage.getItem('ecoquest-progress');
+            if (saved) {
+                gameState = { ...gameState, ...JSON.parse(saved) };
+                updateUI();
+            }
+        }
+
+        function saveProgress() {
+            localStorage.setItem('ecoquest-progress', JSON.stringify(gameState));
+        }
+
+        function updateUI() {
+            document.getElementById('total-points').textContent = gameState.ecoPoints;
+            document.getElementById('eco-points').textContent = gameState.ecoPoints;
+            document.getElementById('quests-completed').textContent = gameState.questsCompleted;
+            document.getElementById('badges-earned').textContent = gameState.badgesEarned;
+            document.getElementById('streak-days').textContent = gameState.streakDays;
+
+            gameState.unlockedBadges.forEach(badgeId => {
+                const badgeElement = document.querySelector(`[data-badge="${badgeId}"]`);
+                if (badgeElement) {
+                    badgeElement.classList.remove('locked');
+                }
+            });
+        }
+
+        function showNotification(message, duration = 3000) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
+        }
+
+        function celebrate() {
+            const celebration = document.getElementById('celebration');
+            const emojis = ['🎉', '🌟', '🎊', '💚', '🌱', '🏆'];
+            
+            for (let i = 0; i < 20; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                celebration.appendChild(confetti);
+                
+                setTimeout(() => {
+                    celebration.removeChild(confetti);
+                }, 3000);
+            }
+        }
+
+        function awardPoints(points, questType = null) {
+            gameState.ecoPoints += points;
+            
+            if (questType) {
+                gameState.questProgress[questType]++;
+                
+                if (gameState.questProgress[questType] === 1) {
+                    gameState.questsCompleted++;
+                    checkForBadges(questType);
+                }
+            }
+            
+            updateUI();
+            saveProgress();
+            celebrate();
+            showNotification(`🎉 You earned ${points} Eco-Points!`);
+        }
+
+        function checkForBadges(questType) {
+            const badges = {
+                'recycling': 'recycling-novice',
+                'forest': 'tree-planter',
+                'solar': 'energy-saver'
+            };
+            
+            if (badges[questType] && !gameState.unlockedBadges.includes(badges[questType])) {
+                gameState.unlockedBadges.push(badges[questType]);
+                gameState.badgesEarned++;
+                showNotification(`🏅 New Badge Unlocked: ${badges[questType].replace('-', ' ').toUpperCase()}!`, 4000);
+            }
+
+            if (gameState.questsCompleted >= 3 && !gameState.unlockedBadges.includes('eco-champion')) {
+                gameState.unlockedBadges.push('eco-champion');
+                gameState.badgesEarned++;
+                showNotification('🏆 CONGRATULATIONS! You are now an ECO-CHAMPION!', 5000);
+            }
+        }
+
+        function showSection(sectionId) {
+            const sections = ['home', 'quests', 'learn', 'profile'];
+            sections.forEach(id => {
+                const section = document.getElementById(id);
+                if (section) {
+                    section.style.display = id === sectionId ? 'block' : 'none';
+                }
+            });
+            
+            if (sectionId === 'home') {
+                document.querySelector('.hero').style.display = 'block';
+            } else {
+                document.querySelector('.hero').style.display = 'none';
+            }
+        }
+
+        function startAdventure() {
+            showSection('quests');
+            showNotification('🚀 Welcome to your eco-adventure! Choose your first mission!');
+        }
+
+        function startRecyclingGame() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="game-area">
+                    <h2>♻️ Recycling Hero Mission</h2>
+                    <p>Drag each item to the correct recycling bin!</p>
+                    <div class="score">Score: <span id="game-score">0</span>/6</div>
+                    
+                    <div class="recycling-bins">
+                        <div class="bin" data-type="plastic" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <div class="bin-icon">🗂️</div>
+                            <div class="bin-label">Plastic</div>
+                        </div>
+                        <div class="bin" data-type="paper" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <div class="bin-icon">📄</div>
+                            <div class="bin-label">Paper</div>
+                        </div>
+                        <div class="bin" data-type="glass" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <div class="bin-icon">🍶</div>
+                            <div class="bin-label">Glass</div>
+                        </div>
+                        <div class="bin" data-type="organic" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <div class="bin-icon">🥬</div>
+                            <div class="bin-label">Organic</div>
+                        </div>
+                    </div>
+                    
+                    <div class="draggable-items">
+                        <div class="draggable-item" draggable="true" data-type="plastic" ondragstart="drag(event)">🥤</div>
+                        <div class="draggable-item" draggable="true" data-type="paper" ondragstart="drag(event)">📰</div>
+                        <div class="draggable-item" draggable="true" data-type="glass" ondragstart="drag(event)">🍺</div>
+                        <div class="draggable-item" draggable="true" data-type="organic" ondragstart="drag(event)">🍌</div>
+                        <div class="draggable-item" draggable="true" data-type="plastic" ondragstart="drag(event)">🧴</div>
+                        <div class="draggable-item" draggable="true" data-type="paper" ondragstart="drag(event)">📦</div>
+                    </div>
+                    
+                    <div id="game-feedback"></div>
+                </div>
+            `;
+            
+            document.getElementById('gameModal').style.display = 'block';
+            window.currentGame = 'recycling';
+            window.gameScore = 0;
+        }
+
+        function startForestGame() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="game-area">
+                    <h2>🌳 Forest Guardian Mission</h2>
+                    <p>Click on empty spaces to plant trees and protect the forest!</p>
+                    <div class="score">Trees Planted: <span id="game-score">0</span>/10</div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(5, 60px); gap: 10px; justify-content: center; margin: 2rem 0;">
+                        ${Array.from({length: 25}, (_, i) => 
+                            `<div class="forest-cell" data-index="${i}" onclick="plantTree(${i})" 
+                                 style="width: 60px; height: 60px; border: 2px solid #8BC34A; border-radius: 10px; 
+                                        display: flex; align-items: center; justify-content: center; cursor: pointer; 
+                                        background: linear-gradient(145deg, #E8F5E8, #C8E6C9); font-size: 1.5rem;">
+                                ${Math.random() > 0.7 ? '🌱' : ''}
+                            </div>`
+                        ).join('')}
+                    </div>
+                    
+                    <div id="game-feedback"></div>
+                </div>
+            `;
+            
+            document.getElementById('gameModal').style.display = 'block';
+            window.currentGame = 'forest';
+            window.gameScore = 0;
+            window.treesPlanted = 0;
+        }
+
+        function startSolarGame() {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="game-area">
+                    <h2>☀️ Solar City Builder</h2>
+                    <p>Connect solar panels to power the city buildings!</p>
+                    <div class="score">Buildings Powered: <span id="game-score">0</span>/6</div>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(4, 80px); gap: 15px; justify-content: center; margin: 2rem 0;">
+                        <div class="solar-panel" onclick="toggleSolar(0)" data-index="0" style="width: 80px; height: 60px; background: #FFE082; border: 2px solid #FFC107; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem;">☀️</div>
+                        <div class="building unpowered" data-index="1" style="width: 80px; height: 60px; background: #FFCDD2; border: 2px solid #F44336; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🏠</div>
+                        <div class="building unpowered" data-index="2" style="width: 80px; height: 60px; background: #FFCDD2; border: 2px solid #F44336; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🏢</div>
+                        <div class="solar-panel" onclick="toggleSolar(3)" data-index="3" style="width: 80px; height: 60px; background: #FFE082; border: 2px solid #FFC107; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem;">☀️</div>
+                        
+                        <div class="building unpowered" data-index="4" style="width: 80px; height: 60px; background: #FFCDD2; border: 2px solid #F44336; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🏪</div>
+                        <div class="solar-panel" onclick="toggleSolar(5)" data-index="5" style="width: 80px; height: 60px; background: #FFE082; border: 2px solid #FFC107; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem;">☀️</div>
+                        <div class="solar-panel" onclick="toggleSolar(6)" data-index="6" style="width: 80px; height: 60px; background: #FFE082; border: 2px solid #FFC107; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem;">☀️</div>
+                        <div class="building unpowered" data-index="7" style="width: 80px; height: 60px; background: #FFCDD2; border: 2px solid #F44336; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🏫</div>
+                        
+                        <div class="building unpowered" data-index="8" style="width: 80px; height: 60px; background: #FFCDD2; border: 2px solid #F44336; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🏭</div>
+                        <div class="building unpowered" data-index="9" style="width: 80px; height: 60px; background: #FFCDD2; border: 2px solid #F44336; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem;">🏥</div>
+                        <div class="solar-panel" onclick="toggleSolar(10)" data-index="10" style="width: 80px; height: 60px; background: #FFE082; border: 2px solid #FFC107; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem;">☀️</div>
+                        <div class="solar-panel" onclick="toggleSolar(11)" data-index="11" style="width: 80px; height: 60px; background: #FFE082; border: 2px solid #FFC107; border-radius: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 1.2rem;">☀️</div>
+                    </div>
+                    
+                    <p style="margin-top: 1rem; color: #666;">💡 Click on solar panels to activate them and power nearby buildings!</p>
+                    <div id="game-feedback"></div>
+                </div>
+            `;
+            
+            document.getElementById('gameModal').style.display = 'block';
+            window.currentGame = 'solar';
+            window.gameScore = 0;
+            window.activePanels = new Set();
+        }
+
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+            ev.target.closest('.bin').classList.add('highlight');
+        }
+
+        function drag(ev) {
+            ev.dataTransfer.setData("text", ev.target.dataset.type);
+            ev.target.classList.add('dragging');
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const itemType = ev.dataTransfer.getData("text");
+            const binType = ev.target.closest('.bin').dataset.type;
+            const bin = ev.target.closest('.bin');
+            
+            bin.classList.remove('highlight');
+            
+            if (itemType === binType) {
+                window.gameScore++;
+                document.getElementById('game-score').textContent = window.gameScore;
+                
+                const draggedItems = document.querySelectorAll('.draggable-item.dragging');
+                draggedItems.forEach(item => item.remove());
+                
+                bin.classList.add('success-animation');
+                setTimeout(() => bin.classList.remove('success-animation'), 500);
+                
+                document.getElementById('game-feedback').innerHTML = 
+                    `<p style="color: #4CAF50; font-weight: bold;">✅ Correct! Great job!</p>`;
+                
+                if (window.gameScore >= 6) {
+                    setTimeout(() => {
+                        document.getElementById('game-feedback').innerHTML = 
+                            `<p style="color: #4CAF50; font-weight: bold; font-size: 1.2rem;">🎉 Mission Complete! You're a Recycling Hero!</p>`;
+                        awardPoints(100, 'recycling');
+                        setTimeout(closeGame, 3000);
+                    }, 1000);
+                }
+            } else {
+                document.getElementById('game-feedback').innerHTML = 
+                    `<p style="color: #f44336; font-weight: bold;">❌ Try again! This doesn't belong here.</p>`;
+            }
+            
+            // Remove dragging class
+            document.querySelectorAll('.draggable-item').forEach(item => 
+                item.classList.remove('dragging'));
+        }
+
+        function plantTree(index) {
+            const cell = document.querySelector(`[data-index="${index}"]`);
+            if (cell.textContent === '' && window.treesPlanted < 10) {
+                cell.textContent = '🌳';
+                cell.style.background = 'linear-gradient(145deg, #C8E6C9, #A5D6A7)';
+                window.treesPlanted++;
+                window.gameScore = window.treesPlanted;
+                document.getElementById('game-score').textContent = window.gameScore;
+                
+                document.getElementById('game-feedback').innerHTML = 
+                    `<p style="color: #4CAF50; font-weight: bold;">🌳 Tree planted successfully!</p>`;
+                
+                if (window.treesPlanted >= 10) {
+                    setTimeout(() => {
+                        document.getElementById('game-feedback').innerHTML = 
+                            `<p style="color: #4CAF50; font-weight: bold; font-size: 1.2rem;">🎉 Forest Protected! You're a true Guardian!</p>`;
+                        awardPoints(150, 'forest');
+                        setTimeout(closeGame, 3000);
+                    }, 1000);
+                }
+            }
+        }
+
+        function toggleSolar(index) {
+            const panel = document.querySelector(`[data-index="${index}"]`);
+            if (panel.classList.contains('solar-panel')) {
+                if (window.activePanels.has(index)) {
+                    window.activePanels.delete(index);
+                    panel.style.background = '#FFE082';
+                    panel.style.boxShadow = 'none';
+                } else {
+                    window.activePanels.add(index);
+                    panel.style.background = 'linear-gradient(45deg, #FFD54F, #FFC107)';
+                    panel.style.boxShadow = '0 0 20px rgba(255, 193, 7, 0.6)';
+                }
+                updatePoweredBuildings();
+            }
+        }
+
+        function updatePoweredBuildings() {
+            const buildings = document.querySelectorAll('.building');
+            let poweredCount = 0;
+            
+            buildings.forEach((building, i) => {
+                const buildingIndex = parseInt(building.dataset.index);
+                const adjacentPanels = getAdjacentPanels(buildingIndex);
+                const isPowered = adjacentPanels.some(panelIndex => window.activePanels.has(panelIndex));
+                
+                if (isPowered) {
+                    building.style.background = 'linear-gradient(145deg, #C8E6C9, #A5D6A7)';
+                    building.style.borderColor = '#4CAF50';
+                    building.classList.remove('unpowered');
+                    poweredCount++;
+                } else {
+                    building.style.background = '#FFCDD2';
+                    building.style.borderColor = '#F44336';
+                    building.classList.add('unpowered');
+                }
+            });
+            
+            window.gameScore = poweredCount;
+            document.getElementById('game-score').textContent = window.gameScore;
+            
+            if (poweredCount >= 6) {
+                setTimeout(() => {
+                    document.getElementById('game-feedback').innerHTML = 
+                        `<p style="color: #4CAF50; font-weight: bold; font-size: 1.2rem;">🎉 City Fully Powered! You're a Solar Champion!</p>`;
+                    awardPoints(200, 'solar');
+                    setTimeout(closeGame, 3000);
+                }, 1000);
+            }
+        }
+
+        function getAdjacentPanels(buildingIndex) {
+            const adjacency = {
+                1: [0, 5], 2: [0, 3, 5, 6], 4: [0, 5], 7: [3, 6, 10, 11],
+                8: [5, 10], 9: [6, 10, 11]
+            };
+            return adjacency[buildingIndex] || [];
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            
+            setTimeout(() => {
+                const floatingContainer = document.querySelector('.floating-elements');
+                const newElements = ['🦋', '🐝', '🌺', '🌸'];
+                newElements.forEach((emoji, index) => {
+                    const element = document.createElement('div');
+                    element.className = 'leaf';
+                    element.textContent = emoji;
+                    element.style.left = Math.random() * 80 + '%';
+                    element.style.top = Math.random() * 80 + '%';
+                    element.style.animationDelay = index * 1.5 + 's';
+                    floatingContainer.appendChild(element);
+                });
+            }, 2000);
+
+            if (gameState.ecoPoints === 0) {
+                setTimeout(() => {
+                    showNotification('🌱 Welcome to Eco-Quest! Start your green adventure today!', 4000);
+                }, 1000);
+            }
+        });
+
+        document.addEventListener('dragend', function() {
+            document.querySelectorAll('.bin').forEach(bin => {
+                bin.classList.remove('highlight');
+            });
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeGame();
+            }
+        });
+    </script>
+</body>
+</html>
