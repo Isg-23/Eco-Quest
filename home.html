@@ -111,6 +111,18 @@
             background: rgba(255,255,255,0.2);
             transform: translateY(-2px);
         }
+        
+        /* New Styles for logged-in state */
+        .user-info {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
 
         .user-stats {
             background: rgba(255,255,255,0.2);
@@ -606,6 +618,82 @@
         @keyframes loading-spin {
             to { transform: rotate(360deg); }
         }
+
+        /* NEW STYLES for Login/Signup and Leaderboard */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .auth-container h3 {
+            color: #2E7D32;
+        }
+
+        .auth-container input {
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            width: 100%;
+            font-size: 1rem;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .auth-container button {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .auth-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .switch-auth {
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #667eea;
+            text-decoration: underline;
+        }
+        
+        /* Leaderboard styles */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .leaderboard-table th {
+            background-color: #f2f2f2;
+            color: #2E7D32;
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #e8f5e8;
+        }
+        
+        .leaderboard-table tr.user-rank {
+            background-color: #c8e6c9;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -627,10 +715,13 @@
                     <li><a href="#quests" onclick="showSection('quests')">🎮 Quests</a></li>
                     <li><a href="#learn" onclick="showSection('learn')">📚 Learn</a></li>
                     <li><a href="#profile" onclick="showSection('profile')">👤 Profile</a></li>
+                    <li><a href="#leaderboard" onclick="showSection('leaderboard')">🏆 Leaderboard</a></li>
                 </ul>
             </nav>
-            <div class="user-stats">
-                <span>🌟 <span id="total-points">0</span> Eco-Points</span>
+            <div id="user-display">
+                <a href="#" class="user-stats" onclick="openAuthModal()">
+                    <span>👤 Login/Sign Up</span>
+                </a>
             </div>
         </div>
     </header>
@@ -762,11 +853,48 @@
             </div>
         </div>
     </section>
+    
+    <section id="leaderboard" class="section" style="display: none;">
+        <h2>🏆 Eco-Quest Leaderboard</h2>
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Username</th>
+                    <th>Eco-Points</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+                </tbody>
+        </table>
+    </section>
 
     <div id="gameModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeGame()">&times;</span>
             <div id="gameContent"></div>
+        </div>
+    </div>
+    
+    <div id="authModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeAuthModal()">&times;</span>
+            <div id="authContent" class="auth-container">
+                <div id="login-form">
+                    <h3>Log In</h3>
+                    <input type="text" id="login-username" placeholder="Username" required>
+                    <input type="password" id="login-password" placeholder="Password" required>
+                    <button onclick="login()">Log In</button>
+                    <p>Don't have an account? <span class="switch-auth" onclick="showSignup()">Sign Up</span></p>
+                </div>
+                <div id="signup-form" style="display: none;">
+                    <h3>Sign Up</h3>
+                    <input type="text" id="signup-username" placeholder="Username" required>
+                    <input type="password" id="signup-password" placeholder="Password" required>
+                    <button onclick="signup()">Sign Up</button>
+                    <p>Already have an account? <span class="switch-auth" onclick="showLogin()">Log In</span></p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -781,27 +909,136 @@
             badgesEarned: 0,
             streakDays: 1,
             unlockedBadges: [],
-            questProgress: {
-                'recycling': 0,
-                'forest': 0,
-                'solar': 0
-            }
+            questProgress: {},
+            username: null 
         };
+        
+        // NEW GLOBAL VARIABLES
+        let users = JSON.parse(localStorage.getItem('ecoquest-users')) || {};
+        // MODIFIED: Use localStorage for persistent login
+        let loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
+        
+        function loadUsers() {
+            users = JSON.parse(localStorage.getItem('ecoquest-users')) || {};
+        }
 
-        function loadProgress() {
-            const saved = localStorage.getItem('ecoquest-progress');
-            if (saved) {
-                gameState = { ...gameState, ...JSON.parse(saved) };
+        function saveUsers() {
+            localStorage.setItem('ecoquest-users', JSON.stringify(users));
+        }
+
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (users[username] && users[username].password === password) {
+                loggedInUser = username;
+                // MODIFIED: Store logged-in state persistently in localStorage
+                localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
+                gameState = users[username].state;
                 updateUI();
+                closeAuthModal();
+                showNotification(`Welcome back, ${username}!`, 3000);
+            } else {
+                showNotification('Invalid username or password.', 3000);
             }
+        }
+
+        function signup() {
+            const username = document.getElementById('signup-username').value;
+            const password = document.getElementById('signup-password').value;
+            
+            if (users[username]) {
+                showNotification('Username already exists. Please choose another.', 3000);
+                return;
+            }
+            
+            if (username.length < 3 || password.length < 3) {
+                showNotification('Username and password must be at least 3 characters.', 3000);
+                return;
+            }
+
+            users[username] = {
+                password: password,
+                state: {
+                    ecoPoints: 0,
+                    questsCompleted: 0,
+                    badgesEarned: 0,
+                    streakDays: 1,
+                    unlockedBadges: [],
+                    questProgress: {},
+                    username: username
+                }
+            };
+            saveUsers();
+            showLogin();
+            showNotification('Sign up successful! You can now log in.', 3000);
+        }
+
+        function logout() {
+            loggedInUser = null;
+            // MODIFIED: Remove logged-in state from localStorage
+            localStorage.removeItem('loggedInUser');
+            // Reset to a default state or clear gameState
+            gameState = {
+                ecoPoints: 0,
+                questsCompleted: 0,
+                badgesEarned: 0,
+                streakDays: 1,
+                unlockedBadges: [],
+                questProgress: {},
+                username: null
+            };
+            updateUI();
+            showNotification('You have been logged out.', 3000);
+            showSection('home');
+        }
+
+        function openAuthModal() {
+            document.getElementById('authModal').style.display = 'block';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('signup-form').style.display = 'none';
+        }
+
+        function showSignup() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+        }
+
+        // Modified loadProgress to handle user-specific state
+        function loadProgress() {
+            loadUsers();
+            // MODIFIED: Check localStorage for logged-in user
+            loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
+
+            if (loggedInUser && users[loggedInUser]) {
+                gameState = users[loggedInUser].state;
+            } else {
+                // If no user is logged in, use the guest state from localStorage
+                const saved = localStorage.getItem('ecoquest-progress');
+                if (saved) {
+                    gameState = { ...gameState, ...JSON.parse(saved) };
+                }
+            }
+            updateUI();
         }
 
         function saveProgress() {
-            localStorage.setItem('ecoquest-progress', JSON.stringify(gameState));
+            if (loggedInUser) {
+                users[loggedInUser].state = gameState;
+                saveUsers();
+            } else {
+                localStorage.setItem('ecoquest-progress', JSON.stringify(gameState));
+            }
         }
 
         function updateUI() {
-            document.getElementById('total-points').textContent = gameState.ecoPoints;
             document.getElementById('eco-points').textContent = gameState.ecoPoints;
             document.getElementById('quests-completed').textContent = gameState.questsCompleted;
             document.getElementById('badges-earned').textContent = gameState.badgesEarned;
@@ -813,8 +1050,72 @@
                     badgeElement.classList.remove('locked');
                 }
             });
+
+            // Update user display in header
+            const userDisplay = document.getElementById('user-display');
+            if (loggedInUser) {
+                userDisplay.innerHTML = `
+                    <div class="user-info">
+                        <span>👋 Hi, ${loggedInUser}</span>
+                        <span>🌟 ${gameState.ecoPoints} Eco-Points</span>
+                        <a href="#" style="text-decoration: none; color: white;" onclick="logout()">🚪 Logout</a>
+                    </div>
+                `;
+            } else {
+                userDisplay.innerHTML = `
+                    <a href="#" class="user-stats" onclick="openAuthModal()">
+                        <span>👤 Login/Sign Up</span>
+                    </a>
+                `;
+            }
+            
+            updateLeaderboard();
         }
 
+        function updateLeaderboard() {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            leaderboardBody.innerHTML = '';
+            
+            const allPlayers = Object.keys(users).map(username => ({
+                username: username,
+                points: users[username].state.ecoPoints
+            }));
+            
+            allPlayers.sort((a, b) => b.points - a.points);
+            
+            allPlayers.slice(0, 10).forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (loggedInUser && player.username === loggedInUser) {
+                    row.classList.add('user-rank');
+                }
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${player.username}</td>
+                    <td>${player.points}</td>
+                `;
+                leaderboardBody.appendChild(row);
+            });
+            
+            // Show current user's rank if not in top 10
+            if (loggedInUser) {
+                const userRank = allPlayers.findIndex(p => p.username === loggedInUser);
+                if (userRank >= 10) {
+                    const separatorRow = document.createElement('tr');
+                    separatorRow.innerHTML = `<td colspan="3" style="text-align: center;">...</td>`;
+                    leaderboardBody.appendChild(separatorRow);
+
+                    const userRow = document.createElement('tr');
+                    userRow.classList.add('user-rank');
+                    userRow.innerHTML = `
+                        <td>${userRank + 1}</td>
+                        <td>${loggedInUser}</td>
+                        <td>${gameState.ecoPoints}</td>
+                    `;
+                    leaderboardBody.appendChild(userRow);
+                }
+            }
+        }
+        
         function showNotification(message, duration = 3000) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
@@ -846,6 +1147,9 @@
             gameState.ecoPoints += points;
             
             if (questType) {
+                if (!gameState.questProgress[questType]) {
+                    gameState.questProgress[questType] = 0;
+                }
                 gameState.questProgress[questType]++;
                 
                 if (gameState.questProgress[questType] === 1) {
@@ -881,7 +1185,7 @@
         }
 
         function showSection(sectionId) {
-            const sections = ['home', 'quests', 'learn', 'profile'];
+            const sections = ['home', 'quests', 'learn', 'profile', 'leaderboard'];
             sections.forEach(id => {
                 const section = document.getElementById(id);
                 if (section) {
@@ -1161,8 +1465,11 @@
                     floatingContainer.appendChild(element);
                 });
             }, 2000);
-
-            if (gameState.ecoPoints === 0) {
+            
+            // MODIFIED: This condition is now more robust
+            if (loggedInUser) {
+                showNotification(`Welcome back, ${loggedInUser}!`, 4000);
+            } else if (localStorage.getItem('ecoquest-progress') === null) {
                 setTimeout(() => {
                     showNotification('🌱 Welcome to Eco-Quest! Start your green adventure today!', 4000);
                 }, 1000);
@@ -1178,6 +1485,7 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') {
                 closeGame();
+                closeAuthModal();
             }
         });
     </script>
