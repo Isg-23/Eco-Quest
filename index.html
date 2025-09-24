@@ -134,6 +134,10 @@
             align-items: center;
             gap: 10px;
         }
+        
+        .user-avatar {
+            font-size: 1.5rem;
+        }
 
         .hero {
             text-align: center;
@@ -694,6 +698,75 @@
             background-color: #c8e6c9;
             font-weight: bold;
         }
+        
+        /* New styles for learning content */
+        .learning-content {
+            text-align: left;
+        }
+        .learning-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2E7D32;
+        }
+        .learning-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        .learning-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+        .learning-content ul li {
+            background: #E8F5E8;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #4CAF50;
+        }
+        
+        /* Styles for profile icon selection */
+        .icon-selection {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        .icon-option {
+            font-size: 2rem;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            background: #e0e0e0;
+        }
+        .icon-option:hover {
+            transform: scale(1.1);
+        }
+        .icon-option.selected {
+            border-color: #4CAF50;
+            background: #c8e6c9;
+        }
+        
+        /* New styles for profile avatar display */
+        .profile-avatar-large {
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .profile-username {
+            font-size: 2rem;
+            text-align: center;
+            font-weight: bold;
+            color: #2E7D32;
+        }
     </style>
 </head>
 <body>
@@ -747,7 +820,7 @@
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 0%">0%</div>
                 </div>
-                <button class="quest-button" onclick="startRecyclingGame()">Start Mission</button>
+                <button class="quest-button" onclick="if (checkLoginAndRedirect()) { startRecyclingGame(); }">Start Mission</button>
             </div>
             
             <div class="quest-card">
@@ -758,7 +831,7 @@
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 0%">0%</div>
                 </div>
-                <button class="quest-button" onclick="startForestGame()">Start Mission</button>
+                <button class="quest-button" onclick="if (checkLoginAndRedirect()) { startForestGame(); }">Start Mission</button>
             </div>
             
             <div class="quest-card">
@@ -769,7 +842,7 @@
                 <div class="progress-container">
                     <div class="progress-bar" style="width: 0%">0%</div>
                 </div>
-                <button class="quest-button" onclick="startSolarGame()">Start Mission</button>
+                <button class="quest-button" onclick="if (checkLoginAndRedirect()) { startSolarGame(); }">Start Mission</button>
             </div>
         </div>
     </section>
@@ -781,76 +854,89 @@
                 <div class="quest-icon">🌍</div>
                 <h3>Climate Change Basics</h3>
                 <p>Discover what climate change is and how it affects our planet.</p>
-                <button class="quest-button">Learn More</button>
+                <button class="quest-button" onclick="showClimateChangeInfo()">Learn More</button>
             </div>
             
             <div class="quest-card">
                 <div class="quest-icon">🐼</div>
                 <h3>Wildlife Conservation</h3>
                 <p>Learn about endangered species and how we can protect them.</p>
-                <button class="quest-button">Learn More</button>
+                <button class="quest-button" onclick="showWildlifeInfo()">Learn More</button>
             </div>
             
             <div class="quest-card">
                 <div class="quest-icon">🌊</div>
                 <h3>Ocean Protection</h3>
                 <p>Understand ocean pollution and marine ecosystem protection.</p>
-                <button class="quest-button">Learn More</button>
+                <button class="quest-button" onclick="showOceanInfo()">Learn More</button>
             </div>
         </div>
     </section>
 
     <section id="profile" class="section" style="display: none;">
         <h2>🏆 Your Eco-Profile</h2>
-        <div class="profile-container">
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-value" id="eco-points">0</div>
-                    <div class="stat-label">🌟 Eco-Points</div>
+        <div id="profile-content">
+            <div class="profile-container">
+                <div class="profile-avatar-large" id="profile-avatar">👤</div>
+                <div class="profile-username" id="profile-username">Guest</div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="eco-points">0</div>
+                        <div class="stat-label">🌟 Eco-Points</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="quests-completed">0</div>
+                        <div class="stat-label">✅ Quests Completed</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="badges-earned">0</div>
+                        <div class="stat-label">🏅 Badges Earned</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="streak-days">0</div>
+                        <div class="stat-label">🔥 Day Streak</div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="quests-completed">0</div>
-                    <div class="stat-label">✅ Quests Completed</div>
+                
+                <div class="badges-container">
+                    <h3>🏅 Your Eco-Badges</h3>
+                    <div class="badges-grid">
+                        <div class="badge locked" data-badge="recycling-novice">
+                            <div class="badge-icon">♻️</div>
+                            <div class="badge-name">Recycling Novice</div>
+                        </div>
+                        <div class="badge locked" data-badge="tree-planter">
+                            <div class="badge-icon">🌳</div>
+                            <div class="badge-name">Tree Planter</div>
+                        </div>
+                        <div class="badge locked" data-badge="energy-saver">
+                            <div class="badge-icon">⚡</div>
+                            <div class="badge-name">Energy Saver</div>
+                        </div>
+                        <div class="badge locked" data-badge="ocean-protector">
+                            <div class="badge-icon">🌊</div>
+                            <div class="badge-name">Ocean Protector</div>
+                        </div>
+                        <div class="badge locked" data-badge="wildlife-friend">
+                            <div class="badge-icon">🐼</div>
+                            <div class="badge-name">Wildlife Friend</div>
+                        </div>
+                        <div class="badge locked" data-badge="eco-champion">
+                            <div class="badge-icon">🏆</div>
+                            <div class="badge-name">Eco Champion</div>
+                        </div>
+                    </div>
                 </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="badges-earned">0</div>
-                    <div class="stat-label">🏅 Badges Earned</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-value" id="streak-days">0</div>
-                    <div class="stat-label">🔥 Day Streak</div>
+                
+                <div class="icon-selection">
+                    <h3>🎨 Choose Your Profile Icon</h3>
+                    <div class="icon-grid" id="icon-grid"></div>
                 </div>
             </div>
-            
-            <div class="badges-container">
-                <h3>🏅 Your Eco-Badges</h3>
-                <div class="badges-grid">
-                    <div class="badge locked" data-badge="recycling-novice">
-                        <div class="badge-icon">♻️</div>
-                        <div class="badge-name">Recycling Novice</div>
-                    </div>
-                    <div class="badge locked" data-badge="tree-planter">
-                        <div class="badge-icon">🌳</div>
-                        <div class="badge-name">Tree Planter</div>
-                    </div>
-                    <div class="badge locked" data-badge="energy-saver">
-                        <div class="badge-icon">⚡</div>
-                        <div class="badge-name">Energy Saver</div>
-                    </div>
-                    <div class="badge locked" data-badge="ocean-protector">
-                        <div class="badge-icon">🌊</div>
-                        <div class="badge-name">Ocean Protector</div>
-                    </div>
-                    <div class="badge locked" data-badge="wildlife-friend">
-                        <div class="badge-icon">🐼</div>
-                        <div class="badge-name">Wildlife Friend</div>
-                    </div>
-                    <div class="badge locked" data-badge="eco-champion">
-                        <div class="badge-icon">🏆</div>
-                        <div class="badge-name">Eco Champion</div>
-                    </div>
-                </div>
-            </div>
+        </div>
+        
+        <div id="login-prompt" style="display: none; text-align: center; margin-top: 50px;">
+            <p style="font-size: 1.5rem; color: #555;">Please log in or sign up to view your profile and track your progress!</p>
         </div>
     </section>
     
@@ -891,6 +977,10 @@
                     <h3>Sign Up</h3>
                     <input type="text" id="signup-username" placeholder="Username" required>
                     <input type="password" id="signup-password" placeholder="Password" required>
+                    <div class="icon-selection">
+                        <h4>Choose an Avatar</h4>
+                        <div class="icon-grid" id="signup-icon-grid"></div>
+                    </div>
                     <button onclick="signup()">Sign Up</button>
                     <p>Already have an account? <span class="switch-auth" onclick="showLogin()">Log In</span></p>
                 </div>
@@ -903,6 +993,7 @@
     <div id="celebration" class="celebration"></div>
 
     <script>
+        const profileIcons = ['🌳', '♻️', '☀️', '🐼', '🌊', '🌱', '🌍', '🦋', '🐝', '🦊', '🐿️', '🦌', '🦜'];
         let gameState = {
             ecoPoints: 0,
             questsCompleted: 0,
@@ -910,12 +1001,11 @@
             streakDays: 1,
             unlockedBadges: [],
             questProgress: {},
-            username: null 
+            username: null,
+            avatar: '👤'
         };
         
-        // NEW GLOBAL VARIABLES
         let users = JSON.parse(localStorage.getItem('ecoquest-users')) || {};
-        // MODIFIED: Use localStorage for persistent login
         let loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
         
         function loadUsers() {
@@ -932,7 +1022,6 @@
             
             if (users[username] && users[username].password === password) {
                 loggedInUser = username;
-                // MODIFIED: Store logged-in state persistently in localStorage
                 localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
                 gameState = users[username].state;
                 updateUI();
@@ -946,6 +1035,7 @@
         function signup() {
             const username = document.getElementById('signup-username').value;
             const password = document.getElementById('signup-password').value;
+            const selectedIcon = document.querySelector('#signup-icon-grid .icon-option.selected');
             
             if (users[username]) {
                 showNotification('Username already exists. Please choose another.', 3000);
@@ -954,6 +1044,11 @@
             
             if (username.length < 3 || password.length < 3) {
                 showNotification('Username and password must be at least 3 characters.', 3000);
+                return;
+            }
+            
+            if (!selectedIcon) {
+                showNotification('Please select a profile icon.', 3000);
                 return;
             }
 
@@ -966,7 +1061,8 @@
                     streakDays: 1,
                     unlockedBadges: [],
                     questProgress: {},
-                    username: username
+                    username: username,
+                    avatar: selectedIcon.textContent
                 }
             };
             saveUsers();
@@ -976,9 +1072,7 @@
 
         function logout() {
             loggedInUser = null;
-            // MODIFIED: Remove logged-in state from localStorage
             localStorage.removeItem('loggedInUser');
-            // Reset to a default state or clear gameState
             gameState = {
                 ecoPoints: 0,
                 questsCompleted: 0,
@@ -986,7 +1080,8 @@
                 streakDays: 1,
                 unlockedBadges: [],
                 questProgress: {},
-                username: null
+                username: null,
+                avatar: '👤'
             };
             updateUI();
             showNotification('You have been logged out.', 3000);
@@ -1009,20 +1104,55 @@
         function showSignup() {
             document.getElementById('login-form').style.display = 'none';
             document.getElementById('signup-form').style.display = 'block';
+            renderIconSelection('#signup-icon-grid');
         }
 
-        // Modified loadProgress to handle user-specific state
+        function renderIconSelection(containerId) {
+            const container = document.querySelector(containerId);
+            container.innerHTML = '';
+            profileIcons.forEach(icon => {
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'icon-option';
+                iconDiv.textContent = icon;
+                iconDiv.onclick = () => {
+                    document.querySelectorAll(`${containerId} .icon-option`).forEach(el => el.classList.remove('selected'));
+                    iconDiv.classList.add('selected');
+                    if (loggedInUser) {
+                        setProfileIcon(icon);
+                    }
+                };
+                container.appendChild(iconDiv);
+            });
+            if (loggedInUser) {
+                const currentIconElement = document.querySelector(`${containerId} .icon-option[data-icon="${gameState.avatar}"]`);
+                if (currentIconElement) {
+                    currentIconElement.classList.add('selected');
+                }
+            } else {
+                document.querySelector(`${containerId} .icon-option`).classList.add('selected');
+            }
+        }
+        
+        function setProfileIcon(icon) {
+            if (loggedInUser) {
+                gameState.avatar = icon;
+                saveProgress();
+                updateUI();
+                showNotification('Profile icon updated!', 2000);
+            }
+        }
+
         function loadProgress() {
             loadUsers();
-            // MODIFIED: Check localStorage for logged-in user
             loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
 
             if (loggedInUser && users[loggedInUser]) {
                 gameState = users[loggedInUser].state;
             } else {
-                // If no user is logged in, use the guest state from localStorage
                 const saved = localStorage.getItem('ecoquest-progress');
                 if (saved) {
+                    // This is for a guest state, which we are no longer using for progress.
+                    // This can be kept as a fallback but the main logic is for loggedInUser.
                     gameState = { ...gameState, ...JSON.parse(saved) };
                 }
             }
@@ -1033,31 +1163,17 @@
             if (loggedInUser) {
                 users[loggedInUser].state = gameState;
                 saveUsers();
-            } else {
-                localStorage.setItem('ecoquest-progress', JSON.stringify(gameState));
             }
         }
-
+        
         function updateUI() {
-            document.getElementById('eco-points').textContent = gameState.ecoPoints;
-            document.getElementById('quests-completed').textContent = gameState.questsCompleted;
-            document.getElementById('badges-earned').textContent = gameState.badgesEarned;
-            document.getElementById('streak-days').textContent = gameState.streakDays;
-
-            gameState.unlockedBadges.forEach(badgeId => {
-                const badgeElement = document.querySelector(`[data-badge="${badgeId}"]`);
-                if (badgeElement) {
-                    badgeElement.classList.remove('locked');
-                }
-            });
-
-            // Update user display in header
             const userDisplay = document.getElementById('user-display');
             if (loggedInUser) {
                 userDisplay.innerHTML = `
                     <div class="user-info">
+                        <span class="user-avatar">${gameState.avatar}</span>
                         <span>👋 Hi, ${loggedInUser}</span>
-                        <span>🌟 ${gameState.ecoPoints} Eco-Points</span>
+                        <span>🌟 ${gameState.ecoPoints}</span>
                         <a href="#" style="text-decoration: none; color: white;" onclick="logout()">🚪 Logout</a>
                     </div>
                 `;
@@ -1067,6 +1183,30 @@
                         <span>👤 Login/Sign Up</span>
                     </a>
                 `;
+            }
+
+            // Update the profile section visibility
+            const profileContent = document.getElementById('profile-content');
+            const loginPrompt = document.getElementById('login-prompt');
+            if (loggedInUser) {
+                profileContent.style.display = 'block';
+                loginPrompt.style.display = 'none';
+                document.getElementById('profile-avatar').textContent = gameState.avatar;
+                document.getElementById('profile-username').textContent = gameState.username;
+                document.getElementById('eco-points').textContent = gameState.ecoPoints;
+                document.getElementById('quests-completed').textContent = gameState.questsCompleted;
+                document.getElementById('badges-earned').textContent = gameState.badgesEarned;
+                document.getElementById('streak-days').textContent = gameState.streakDays;
+                gameState.unlockedBadges.forEach(badgeId => {
+                    const badgeElement = document.querySelector(`[data-badge="${badgeId}"]`);
+                    if (badgeElement) {
+                        badgeElement.classList.remove('locked');
+                    }
+                });
+                renderIconSelection('#icon-grid');
+            } else {
+                profileContent.style.display = 'none';
+                loginPrompt.style.display = 'block';
             }
             
             updateLeaderboard();
@@ -1078,7 +1218,8 @@
             
             const allPlayers = Object.keys(users).map(username => ({
                 username: username,
-                points: users[username].state.ecoPoints
+                points: users[username].state.ecoPoints,
+                avatar: users[username].state.avatar || '👤'
             }));
             
             allPlayers.sort((a, b) => b.points - a.points);
@@ -1090,7 +1231,7 @@
                 }
                 row.innerHTML = `
                     <td>${index + 1}</td>
-                    <td>${player.username}</td>
+                    <td><span class="user-avatar">${player.avatar}</span> ${player.username}</td>
                     <td>${player.points}</td>
                 `;
                 leaderboardBody.appendChild(row);
@@ -1108,7 +1249,7 @@
                     userRow.classList.add('user-rank');
                     userRow.innerHTML = `
                         <td>${userRank + 1}</td>
-                        <td>${loggedInUser}</td>
+                        <td><span class="user-avatar">${gameState.avatar}</span> ${loggedInUser}</td>
                         <td>${gameState.ecoPoints}</td>
                     `;
                     leaderboardBody.appendChild(userRow);
@@ -1134,11 +1275,14 @@
                 confetti.className = 'confetti';
                 confetti.textContent = emojis[Math.floor(Math.random() * emojis.length)];
                 confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.top = '0';
                 confetti.style.animationDelay = Math.random() * 2 + 's';
                 celebration.appendChild(confetti);
                 
                 setTimeout(() => {
-                    celebration.removeChild(confetti);
+                    if (celebration.contains(confetti)) {
+                        celebration.removeChild(confetti);
+                    }
                 }, 3000);
             }
         }
@@ -1203,6 +1347,16 @@
         function startAdventure() {
             showSection('quests');
             showNotification('🚀 Welcome to your eco-adventure! Choose your first mission!');
+        }
+        
+        function checkLoginAndRedirect() {
+            if (!loggedInUser) {
+                showNotification('🚨 You must be logged in to play missions!', 4000);
+                openAuthModal();
+                showLogin();
+                return false;
+            }
+            return true;
         }
 
         function startRecyclingGame() {
@@ -1363,19 +1517,17 @@
                     `<p style="color: #f44336; font-weight: bold;">❌ Try again! This doesn't belong here.</p>`;
             }
             
-            // Remove dragging class
             document.querySelectorAll('.draggable-item').forEach(item => 
                 item.classList.remove('dragging'));
         }
 
         function plantTree(index) {
-            const cell = document.querySelector(`[data-index="${index}"]`);
-            if (cell.textContent === '' && window.treesPlanted < 10) {
+            const cell = document.querySelector(`.forest-cell[data-index="${index}"]`);
+            if (cell.textContent.trim() === '') {
                 cell.textContent = '🌳';
                 cell.style.background = 'linear-gradient(145deg, #C8E6C9, #A5D6A7)';
                 window.treesPlanted++;
-                window.gameScore = window.treesPlanted;
-                document.getElementById('game-score').textContent = window.gameScore;
+                document.getElementById('game-score').textContent = window.treesPlanted;
                 
                 document.getElementById('game-feedback').innerHTML = 
                     `<p style="color: #4CAF50; font-weight: bold;">🌳 Tree planted successfully!</p>`;
@@ -1388,6 +1540,9 @@
                         setTimeout(closeGame, 3000);
                     }, 1000);
                 }
+            } else {
+                document.getElementById('game-feedback').innerHTML = 
+                    `<p style="color: #f44336; font-weight: bold;">❌ There's already something here!</p>`;
             }
         }
 
@@ -1449,6 +1604,80 @@
             return adjacency[buildingIndex] || [];
         }
 
+        function showLearningContent(title, content) {
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <div class="learning-content">
+                    <h3>${title}</h3>
+                    ${content}
+                </div>
+            `;
+            document.getElementById('gameModal').style.display = 'block';
+        }
+
+        function showClimateChangeInfo() {
+            const content = `
+                <p>Climate change refers to significant and long-term changes in the Earth's weather patterns and average temperatures. While the Earth's climate has always changed, the current rate of change is much faster and is primarily caused by human activities.</p>
+                <h4>What Causes It?</h4>
+                <ul>
+                    <li><strong>Fossil Fuels:</strong> Burning coal, oil, and gas for energy releases greenhouse gases like carbon dioxide (CO2) into the atmosphere.</li>
+                    <li><strong>Deforestation:</strong> Trees absorb CO2, so clearing forests reduces the planet's ability to naturally regulate the climate.</li>
+                    <li><strong>Industrial Activities:</strong> Many industrial processes release powerful greenhouse gases.</li>
+                </ul>
+                <h4>How Can You Help?</h4>
+                <p>Every small action counts! You can help by:</p>
+                <ul>
+                    <li>Using less energy at home.</li>
+                    <li>Choosing public transport, biking, or walking.</li>
+                    <li>Reducing, reusing, and recycling waste.</li>
+                    <li>Planting trees! 🌳</li>
+                </ul>
+            `;
+            showLearningContent('🌍 Climate Change Basics', content);
+        }
+
+        function showWildlifeInfo() {
+            const content = `
+                <p>Wildlife conservation is the practice of protecting wild animal and plant species and their habitats. It aims to prevent species from going extinct and to ensure that nature's ecosystems are healthy and functioning.</p>
+                <h4>Why is it Important?</h4>
+                <ul>
+                    <li><strong>Ecosystem Balance:</strong> Every species plays a unique role. Losing one can disrupt the entire ecosystem.</li>
+                    <li><strong>Biodiversity:</strong> A wide variety of life forms keeps our planet resilient and healthy.</li>
+                    <li><strong>Human Well-being:</strong> We rely on healthy ecosystems for clean air, water, and food.</li>
+                </ul>
+                <h4>How Can You Help?</h4>
+                <p>You can become a wildlife friend by:</p>
+                <ul>
+                    <li>Supporting conservation organizations.</li>
+                    <li>Reducing your carbon footprint.</li>
+                    <li>Choosing sustainable products that don't harm wildlife.</li>
+                    <li>Not littering! Clean up after yourself to protect animal habitats.</li>
+                </ul>
+            `;
+            showLearningContent('🐼 Wildlife Conservation', content);
+        }
+
+        function showOceanInfo() {
+            const content = `
+                <p>The ocean is a vast and vital part of our planet, producing most of the world's oxygen and regulating our climate. However, it is under threat from pollution, overfishing, and climate change.</p>
+                <h4>Major Threats to Oceans</h4>
+                <ul>
+                    <li><strong>Plastic Pollution:</strong> Plastic waste harms and kills marine life and pollutes beaches.</li>
+                    <li><strong>Ocean Acidification:</strong> The ocean absorbs CO2, which makes it more acidic and threatens coral reefs and shellfish.</li>
+                    <li><strong>Oil Spills:</strong> Accidental oil spills cause catastrophic damage to marine ecosystems.</li>
+                </ul>
+                <h4>How Can You Help?</h4>
+                <p>Protecting our oceans starts with you:</p>
+                <ul>
+                    <li>Reduce your use of single-use plastics (bottles, bags, straws).</li>
+                    <li>Participate in a beach or river cleanup.</li>
+                    <li>Choose sustainably sourced seafood.</li>
+                    <li>Educate others about the importance of our oceans.</li>
+                </ul>
+            `;
+            showLearningContent('🌊 Ocean Protection', content);
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             loadProgress();
             
@@ -1466,7 +1695,6 @@
                 });
             }, 2000);
             
-            // MODIFIED: This condition is now more robust
             if (loggedInUser) {
                 showNotification(`Welcome back, ${loggedInUser}!`, 4000);
             } else if (localStorage.getItem('ecoquest-progress') === null) {
@@ -1491,4 +1719,3 @@
     </script>
 </body>
 </html>
-
