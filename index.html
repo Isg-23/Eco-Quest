@@ -645,6 +645,16 @@
             font-family: 'Comic Sans MS', cursive, sans-serif;
         }
 
+        .auth-container select {
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            width: 100%;
+            font-size: 1rem;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #fff;
+        }
+
         .auth-container button {
             background: linear-gradient(45deg, #4CAF50, #81C784);
             color: white;
@@ -726,6 +736,26 @@
             margin-bottom: 10px;
             border-left: 5px solid #4CAF50;
         }
+        /* Responsive video container for Learn module */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 */
+            margin-top: 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            background: #000;
+        }
+        .video-container iframe,
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
         
         /* Styles for profile icon selection */
         .icon-selection {
@@ -787,6 +817,7 @@
                     <li><a href="#home" onclick="showSection('home')">🏠 Home</a></li>
                     <li><a href="#quests" onclick="showSection('quests')">🎮 Quests</a></li>
                     <li><a href="#learn" onclick="showSection('learn')">📚 Learn</a></li>
+                    <li><a href="#levels" onclick="showSection('levels')">🎓 Levels</a></li>
                     <li><a href="#profile" onclick="showSection('profile')">👤 Profile</a></li>
                     <li><a href="#leaderboard" onclick="showSection('leaderboard')">🏆 Leaderboard</a></li>
                 </ul>
@@ -807,6 +838,41 @@
                 🚀 Start Your Green Adventure!
             </button>
         </div>
+    </section>
+
+    <section id="levels" class="section" style="display: none;">
+        <h2>🎓 Select Your Class Level</h2>
+        <div class="quest-grid">
+            <div class="quest-card">
+                <div class="difficulty">1st – 3rd Class</div>
+                <div class="quest-icon">🌱</div>
+                <h3>Beginner Explorers</h3>
+                <p>Fun and simple activities to start your green journey.</p>
+                <button class="quest-button" onclick="selectLevel('level_1_3')">Select Level</button>
+            </div>
+            <div class="quest-card">
+                <div class="difficulty">4th – 6th Class</div>
+                <div class="quest-icon">🌿</div>
+                <h3>Eco Learners</h3>
+                <p>Explore recycling, trees, and nature with exciting missions.</p>
+                <button class="quest-button" onclick="selectLevel('level_4_6')">Select Level</button>
+            </div>
+            <div class="quest-card">
+                <div class="difficulty">7th – 9th Class</div>
+                <div class="quest-icon">🌳</div>
+                <h3>Green Guardians</h3>
+                <p>Dive deeper into conservation and renewable energy.</p>
+                <button class="quest-button" onclick="selectLevel('level_7_9')">Select Level</button>
+            </div>
+            <div class="quest-card">
+                <div class="difficulty">10th – 12th Class</div>
+                <div class="quest-icon">☀️</div>
+                <h3>Eco Champions</h3>
+                <p>Advanced challenges focusing on sustainable cities and climate.</p>
+                <button class="quest-button" onclick="selectLevel('level_10_12')">Select Level</button>
+            </div>
+        </div>
+        <p style="text-align:center; color:#555;">Your selection will personalize recommendations without removing any features.</p>
     </section>
 
     <section id="quests" class="section" style="display: none;">
@@ -970,6 +1036,14 @@
                     <h3>Log In</h3>
                     <input type="text" id="login-username" placeholder="Username" required>
                     <input type="password" id="login-password" placeholder="Password" required>
+                    <label for="login-class" style="margin-top: 0.5rem; color:#2E7D32; font-weight:bold;">Class Level (optional)</label>
+                    <select id="login-class">
+                        <option value="">Select class level (optional)</option>
+                        <option value="level_1_3">🌱 1st–3rd Class</option>
+                        <option value="level_4_6">🌿 4th–6th Class</option>
+                        <option value="level_7_9">🌳 7th–9th Class</option>
+                        <option value="level_10_12">☀️ 10th–12th Class</option>
+                    </select>
                     <button onclick="login()">Log In</button>
                     <p>Don't have an account? <span class="switch-auth" onclick="showSignup()">Sign Up</span></p>
                 </div>
@@ -977,6 +1051,14 @@
                     <h3>Sign Up</h3>
                     <input type="text" id="signup-username" placeholder="Username" required>
                     <input type="password" id="signup-password" placeholder="Password" required>
+                    <label for="signup-class" style="margin-top: 0.5rem; color:#2E7D32; font-weight:bold;">Select Your Class Level</label>
+                    <select id="signup-class" required>
+                        <option value="">Select your class level</option>
+                        <option value="level_1_3">🌱 1st–3rd Class</option>
+                        <option value="level_4_6">🌿 4th–6th Class</option>
+                        <option value="level_7_9">🌳 7th–9th Class</option>
+                        <option value="level_10_12">☀️ 10th–12th Class</option>
+                    </select>
                     <div class="icon-selection">
                         <h4>Choose an Avatar</h4>
                         <div class="icon-grid" id="signup-icon-grid"></div>
@@ -1002,7 +1084,8 @@
             unlockedBadges: [],
             questProgress: {},
             username: null,
-            avatar: '👤'
+            avatar: '👤',
+            selectedLevel: null
         };
         
         let users = JSON.parse(localStorage.getItem('ecoquest-users')) || {};
@@ -1019,11 +1102,17 @@
         function login() {
             const username = document.getElementById('login-username').value;
             const password = document.getElementById('login-password').value;
+            const loginSelectedLevel = document.getElementById('login-class').value;
             
             if (users[username] && users[username].password === password) {
                 loggedInUser = username;
                 localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
                 gameState = users[username].state;
+                // If user picked a class level during login, update it
+                if (loginSelectedLevel) {
+                    gameState.selectedLevel = loginSelectedLevel;
+                    saveProgress();
+                }
                 updateUI();
                 closeAuthModal();
                 showNotification(`Welcome back, ${username}!`, 3000);
@@ -1036,6 +1125,7 @@
             const username = document.getElementById('signup-username').value;
             const password = document.getElementById('signup-password').value;
             const selectedIcon = document.querySelector('#signup-icon-grid .icon-option.selected');
+            const signupSelectedLevel = document.getElementById('signup-class').value;
             
             if (users[username]) {
                 showNotification('Username already exists. Please choose another.', 3000);
@@ -1051,6 +1141,11 @@
                 showNotification('Please select a profile icon.', 3000);
                 return;
             }
+            
+            if (!signupSelectedLevel) {
+                showNotification('Please select your class level.', 3000);
+                return;
+            }
 
             users[username] = {
                 password: password,
@@ -1062,7 +1157,8 @@
                     unlockedBadges: [],
                     questProgress: {},
                     username: username,
-                    avatar: selectedIcon.textContent
+                    avatar: selectedIcon.textContent,
+                    selectedLevel: signupSelectedLevel
                 }
             };
             saveUsers();
@@ -1081,7 +1177,8 @@
                 unlockedBadges: [],
                 questProgress: {},
                 username: null,
-                avatar: '👤'
+                avatar: '👤',
+                selectedLevel: null
             };
             updateUI();
             showNotification('You have been logged out.', 3000);
@@ -1166,6 +1263,33 @@
             }
         }
         
+        const levelGroups = {
+            'level_1_3': { name: '1st–3rd', icon: '🌱' },
+            'level_4_6': { name: '4th–6th', icon: '🌿' },
+            'level_7_9': { name: '7th–9th', icon: '🌳' },
+            'level_10_12': { name: '10th–12th', icon: '☀️' }
+        };
+
+        function getSelectedLevelLabel() {
+            if (!gameState.selectedLevel) return '';
+            const lv = levelGroups[gameState.selectedLevel];
+            return lv ? `${lv.icon} ${lv.name}` : '';
+        }
+
+        function selectLevel(levelKey) {
+            if (!levelGroups[levelKey]) {
+                showNotification('Invalid level selection.', 3000);
+                return;
+            }
+            gameState.selectedLevel = levelKey;
+            saveProgress();
+            updateUI();
+            const label = getSelectedLevelLabel();
+            showNotification(`🎓 Level selected: ${label}`, 3000);
+            // After selecting, guide user to quests
+            showSection('quests');
+        }
+
         function updateUI() {
             const userDisplay = document.getElementById('user-display');
             if (loggedInUser) {
@@ -1174,6 +1298,7 @@
                         <span class="user-avatar">${gameState.avatar}</span>
                         <span>👋 Hi, ${loggedInUser}</span>
                         <span>🌟 ${gameState.ecoPoints}</span>
+                        ${gameState.selectedLevel ? `<span class="difficulty" style="background:#E3F2FD;color:#1565C0;">${getSelectedLevelLabel()}</span>` : ''}
                         <a href="#" style="text-decoration: none; color: white;" onclick="logout()">🚪 Logout</a>
                     </div>
                 `;
@@ -1329,7 +1454,7 @@
         }
 
         function showSection(sectionId) {
-            const sections = ['home', 'quests', 'learn', 'profile', 'leaderboard'];
+            const sections = ['home', 'quests', 'learn', 'levels', 'profile', 'leaderboard'];
             sections.forEach(id => {
                 const section = document.getElementById(id);
                 if (section) {
@@ -1604,12 +1729,13 @@
             return adjacency[buildingIndex] || [];
         }
 
-        function showLearningContent(title, content) {
+        function showLearningContent(title, content, videoHTML = null) {
             const gameContent = document.getElementById('gameContent');
             gameContent.innerHTML = `
                 <div class="learning-content">
                     <h3>${title}</h3>
                     ${content}
+                    ${videoHTML ? videoHTML : ''}
                 </div>
             `;
             document.getElementById('gameModal').style.display = 'block';
@@ -1633,7 +1759,12 @@
                     <li>Planting trees! 🌳</li>
                 </ul>
             `;
-            showLearningContent('🌍 Climate Change Basics', content);
+            const video = `
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/myZAvqqp9Jc" title="Climate Change Basics" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            `;
+            showLearningContent('🌍 Climate Change Basics', content, video);
         }
 
         function showWildlifeInfo() {
@@ -1654,9 +1785,13 @@
                     <li>Not littering! Clean up after yourself to protect animal habitats.</li>
                 </ul>
             `;
-            showLearningContent('🐼 Wildlife Conservation', content);
+            const video = `
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/e-yAO267tvE" title="Wildlife Conservation" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            `;
+            showLearningContent('🐼 Wildlife Conservation', content, video);
         }
-
         function showOceanInfo() {
             const content = `
                 <p>The ocean is a vast and vital part of our planet, producing most of the world's oxygen and regulating our climate. However, it is under threat from pollution, overfishing, and climate change.</p>
@@ -1675,7 +1810,12 @@
                     <li>Educate others about the importance of our oceans.</li>
                 </ul>
             `;
-            showLearningContent('🌊 Ocean Protection', content);
+            const video = `
+                <div class="video-container">
+                    <iframe src="https://www.youtube.com/embed/uRnFzZj4dVk" title="Ocean Protection" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+                </div>
+            `;
+            showLearningContent('🌊 Ocean Protection', content, video);
         }
 
         document.addEventListener('DOMContentLoaded', function() {
