@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Eco-Quest 🌱 - Save Our Planet!</title>
     <style>
-        /* General Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -19,7 +18,6 @@
             overflow-x: hidden;
         }
 
-        /* Floating Elements (Background) */
         .floating-elements {
             position: fixed;
             width: 100%;
@@ -56,7 +54,6 @@
             50% { transform: translateY(-20px) rotate(5deg); }
         }
 
-        /* Header and Navigation */
         header {
             background: linear-gradient(135deg, #2E8B57, #228B22);
             padding: 1rem 2rem;
@@ -98,7 +95,7 @@
         nav ul {
             display: flex;
             list-style: none;
-            gap: 1.5rem; /* Reduced gap for one more item */
+            gap: 2rem;
         }
 
         nav a {
@@ -115,8 +112,19 @@
             transform: translateY(-2px);
         }
         
-        /* User Info/Stats in Header */
-        .user-info, .user-stats {
+        /* New Styles for logged-in state */
+        .user-info {
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .user-stats {
             background: rgba(255,255,255,0.2);
             padding: 0.5rem 1rem;
             border-radius: 25px;
@@ -131,7 +139,6 @@
             font-size: 1.5rem;
         }
 
-        /* Hero Section */
         .hero {
             text-align: center;
             padding: 4rem 2rem;
@@ -148,7 +155,6 @@
             left: 0;
             right: 0;
             bottom: 0;
-            /* Placeholder for repeating tree pattern */
             background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="trees" patternUnits="userSpaceOnUse" width="20" height="20"><text x="2" y="15" font-size="12" fill="rgba(255,255,255,0.1)">🌲</text></pattern></defs><rect width="100" height="100" fill="url(%23trees)"/></svg>');
             opacity: 0.3;
         }
@@ -200,7 +206,6 @@
             transform: translateY(-1px) scale(1.02);
         }
 
-        /* Section Layouts */
         .section {
             padding: 4rem 2rem;
             max-width: 1200px;
@@ -290,6 +295,26 @@
             overflow: hidden;
         }
 
+        .quest-button::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .quest-button:hover::before {
+            left: 100%;
+        }
+
+        .quest-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
         .difficulty {
             display: inline-block;
             background: #FFE082;
@@ -301,7 +326,6 @@
             margin-bottom: 1rem;
         }
 
-        /* Profile Styles */
         .profile-container {
             background: linear-gradient(145deg, #ffffff, #f0f8f0);
             border-radius: 20px;
@@ -325,20 +349,58 @@
             text-align: center;
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-        
-        .profile-avatar-large {
-            font-size: 5rem;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-        .profile-username {
+
+        .stat-value {
             font-size: 2rem;
-            text-align: center;
             font-weight: bold;
-            color: #2E7D32;
+            margin-bottom: 0.5rem;
         }
 
-        /* Modals and Games */
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .badges-container {
+            margin-top: 2rem;
+        }
+
+        .badges-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+        }
+
+        .badge {
+            background: white;
+            border-radius: 15px;
+            padding: 1rem;
+            text-align: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .badge:hover {
+            transform: scale(1.05);
+        }
+
+        .badge-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-name {
+            font-size: 0.8rem;
+            color: #555;
+            font-weight: bold;
+        }
+
+        .badge.locked {
+            opacity: 0.5;
+            background: #f5f5f5;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -372,8 +434,16 @@
             cursor: pointer;
             transition: color 0.3s ease;
         }
-        
-        /* Game specific styles (Recycling Game) */
+
+        .close:hover {
+            color: #000;
+        }
+
+        .game-area {
+            text-align: center;
+            padding: 2rem 0;
+        }
+
         .recycling-bins {
             display: flex;
             justify-content: space-around;
@@ -396,6 +466,30 @@
             position: relative;
         }
 
+        .bin.highlight {
+            border-color: #4CAF50;
+            background: rgba(76, 175, 80, 0.1);
+        }
+
+        .bin-icon {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .bin-label {
+            font-size: 0.8rem;
+            font-weight: bold;
+            color: #555;
+        }
+
+        .draggable-items {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+        }
+
         .draggable-item {
             background: white;
             border: 2px solid #ddd;
@@ -408,90 +502,16 @@
             text-align: center;
         }
 
-        /* Notification Styling */
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(45deg, #4CAF50, #81C784);
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 10px;
+        .draggable-item:hover {
+            transform: scale(1.1);
             box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            transform: translateX(300px);
-            transition: transform 0.3s ease;
-            z-index: 1001;
         }
 
-        .notification.show {
-            transform: translateX(0);
-        }
-        
-        /* Community Hub Styles */
-        .community-post {
-            background: #ffffff;
-            border-radius: 15px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            border-left: 5px solid #4CAF50;
+        .draggable-item.dragging {
+            opacity: 0.5;
+            transform: rotate(5deg);
         }
 
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 0.8rem;
-            border-bottom: 1px solid #eee;
-            padding-bottom: 0.5rem;
-        }
-
-        .post-avatar {
-            font-size: 1.5rem;
-        }
-
-        .post-username {
-            font-weight: bold;
-            color: #2E7D32;
-        }
-
-        .post-content {
-            color: #555;
-            line-height: 1.6;
-            margin-bottom: 1rem;
-            word-wrap: break-word;
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            color: #888;
-        }
-
-        .like-button {
-            background: none;
-            border: none;
-            color: #888;
-            cursor: pointer;
-            font-weight: bold;
-            transition: color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .like-button:hover {
-            color: #FF6B35;
-        }
-
-        .like-button.liked {
-            color: #FF6B35;
-        }
-        /* End Community Hub Styles */
-
-        /* Responsive adjustments */
         @media (max-width: 768px) {
             .nav-container {
                 flex-direction: column;
@@ -509,6 +529,273 @@
             .quest-grid {
                 grid-template-columns: 1fr;
             }
+
+            .recycling-bins {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        @keyframes success {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); background: #4CAF50; }
+            100% { transform: scale(1); }
+        }
+
+        .success-animation {
+            animation: success 0.5s ease-in-out;
+        }
+
+        .progress-container {
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            transition: width 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+
+        .confetti {
+            position: absolute;
+            font-size: 20px;
+            animation: confetti-fall 3s ease-in-out forwards;
+        }
+
+        @keyframes confetti-fall {
+            0% {
+                opacity: 1;
+                transform: translateY(-100vh) rotate(0deg);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh) rotate(720deg);
+            }
+        }
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transform: translateX(300px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: loading-spin 1s ease-in-out infinite;
+        }
+
+        @keyframes loading-spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* NEW STYLES for Login/Signup and Leaderboard */
+        .auth-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .auth-container h3 {
+            color: #2E7D32;
+        }
+
+        .auth-container input {
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            width: 100%;
+            font-size: 1rem;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .auth-container select {
+            padding: 0.8rem;
+            border-radius: 10px;
+            border: 2px solid #ddd;
+            width: 100%;
+            font-size: 1rem;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: #fff;
+        }
+
+        .auth-container button {
+            background: linear-gradient(45deg, #4CAF50, #81C784);
+            color: white;
+            border: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .auth-container button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+        }
+
+        .switch-auth {
+            font-size: 0.9rem;
+            cursor: pointer;
+            color: #667eea;
+            text-decoration: underline;
+        }
+        
+        /* Leaderboard styles */
+        .leaderboard-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 2rem;
+        }
+
+        .leaderboard-table th, .leaderboard-table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .leaderboard-table th {
+            background-color: #f2f2f2;
+            color: #2E7D32;
+        }
+
+        .leaderboard-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        .leaderboard-table tr:hover {
+            background-color: #e8f5e8;
+        }
+        
+        .leaderboard-table tr.user-rank {
+            background-color: #c8e6c9;
+            font-weight: bold;
+        }
+        
+        /* New styles for learning content */
+        .learning-content {
+            text-align: left;
+        }
+        .learning-content h3 {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #2E7D32;
+        }
+        .learning-content p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+        .learning-content ul {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1.5rem;
+        }
+        .learning-content ul li {
+            background: #E8F5E8;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            border-left: 5px solid #4CAF50;
+        }
+        /* Responsive video container for Learn module */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-top: 56.25%; /* 16:9 */
+            margin-top: 1rem;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            background: #000;
+        }
+        .video-container iframe,
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 0;
+        }
+        
+        /* Styles for profile icon selection */
+        .icon-selection {
+            text-align: center;
+            margin-top: 1.5rem;
+        }
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(50px, 1fr));
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        .icon-option {
+            font-size: 2rem;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 2px solid transparent;
+            background: #e0e0e0;
+        }
+        .icon-option:hover {
+            transform: scale(1.1);
+        }
+        .icon-option.selected {
+            border-color: #4CAF50;
+            background: #c8e6c9;
+        }
+        
+        /* New styles for profile avatar display */
+        .profile-avatar-large {
+            font-size: 5rem;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+        .profile-username {
+            font-size: 2rem;
+            text-align: center;
+            font-weight: bold;
+            color: #2E7D32;
         }
     </style>
 </head>
@@ -530,7 +817,6 @@
                     <li><a href="#home" onclick="showSection('home')">🏠 Home</a></li>
                     <li><a href="#quests" onclick="showSection('quests')">🎮 Quests</a></li>
                     <li><a href="#learn" onclick="showSection('learn')">📚 Learn</a></li>
-                    <li><a href="#community" onclick="showSection('community')">📣 Community</a></li>
                     <li><a href="#levels" onclick="showSection('levels')">🎓 Levels</a></li>
                     <li><a href="#profile" onclick="showSection('profile')">👤 Profile</a></li>
                     <li><a href="#leaderboard" onclick="showSection('leaderboard')">🏆 Leaderboard</a></li>
@@ -653,18 +939,6 @@
         </div>
     </section>
 
-    <section id="community" class="section" style="display: none;">
-        <h2>🗣️ Eco-Community Hub</h2>
-        <div id="community-post-form" style="margin-bottom: 2rem; background: #E8F5E8; padding: 1.5rem; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);">
-            <h3>Share Your Eco-Thoughts!</h3>
-            <textarea id="post-input" placeholder="What green thing are you doing today? (Max 200 chars)" maxlength="200" style="width: 100%; padding: 0.8rem; border-radius: 10px; border: 1px solid #ccc; resize: vertical; margin: 10px 0; font-family: 'Comic Sans MS', cursive, sans-serif; min-height: 80px;"></textarea>
-            <button class="cta-button" style="width: 100%;" onclick="submitPost()">Post to Community</button>
-        </div>
-        <div id="community-posts-container">
-            <p style="text-align: center; color: #777;">Loading community posts...</p>
-        </div>
-    </section>
-
     <section id="profile" class="section" style="display: none;">
         <h2>🏆 Your Eco-Profile</h2>
         <div id="profile-content">
@@ -719,18 +993,19 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="icon-selection">
                     <h3>🎨 Choose Your Profile Icon</h3>
                     <div class="icon-grid" id="icon-grid"></div>
                 </div>
             </div>
         </div>
+        
         <div id="login-prompt" style="display: none; text-align: center; margin-top: 50px;">
             <p style="font-size: 1.5rem; color: #555;">Please log in or sign up to view your profile and track your progress!</p>
         </div>
     </section>
-
+    
     <section id="leaderboard" class="section" style="display: none;">
         <h2>🏆 Eco-Quest Leaderboard</h2>
         <table class="leaderboard-table">
@@ -748,7 +1023,7 @@
 
     <div id="gameModal" class="modal">
         <div class="modal-content">
-            <span class="close" onclick="closeGame()">&times;</span> 
+            <span class="close" onclick="closeGame()">&times;</span>
             <div id="gameContent"></div>
         </div>
     </div>
@@ -757,10 +1032,12 @@
         <div class="modal-content">
             <span class="close" onclick="closeAuthModal()">&times;</span>
             <div id="authContent" class="auth-container">
+                
                 <div id="login-form">
                     <h3>Log In</h3>
                     <input type="text" id="login-username" placeholder="Username" required>
                     <input type="password" id="login-password" placeholder="Password" required>
+                    
                     <label for="login-class" style="margin-top: 0.5rem; color:#2E7D32; font-weight:bold;">Class Level (optional)</label>
                     <select id="login-class">
                         <option value="">Select class level (optional)</option>
@@ -769,13 +1046,16 @@
                         <option value="level_7_9">🌳 7th–9th Class</option>
                         <option value="level_10_12">☀️ 10th–12th Class</option>
                     </select>
+
                     <button onclick="login()">Log In</button>
                     <p>Don't have an account? <span class="switch-auth" onclick="showSignup()">Sign Up</span></p>
                 </div>
+
                 <div id="signup-form" style="display: none;">
                     <h3>Sign Up</h3>
                     <input type="text" id="signup-username" placeholder="Username" required>
                     <input type="password" id="signup-password" placeholder="Password" required>
+                    
                     <label for="signup-class" style="margin-top: 0.5rem; color:#2E7D32; font-weight:bold;">Select Your Class Level</label>
                     <select id="signup-class" required>
                         <option value="">Select your class level</option>
@@ -784,10 +1064,12 @@
                         <option value="level_7_9">🌳 7th–9th Class</option>
                         <option value="level_10_12">☀️ 10th–12th Class</option>
                     </select>
+                    
                     <div class="icon-selection">
                         <h4>Choose an Avatar</h4>
                         <div class="icon-grid" id="signup-icon-grid"></div>
                     </div>
+                    
                     <button onclick="signup()">Sign Up</button>
                     <p>Already have an account? <span class="switch-auth" onclick="showLogin()">Log In</span></p>
                 </div>
@@ -800,7 +1082,7 @@
 
     <script>
         const profileIcons = ['🌳', '♻️', '☀️', '🐼', '🌊', '🌱', '🌍', '🦋', '🐝', '🦊', '🐿️', '🦌', '🦜'];
-        
+
         // --- State Management ---
         let gameState = {
             ecoPoints: 0,
@@ -808,16 +1090,13 @@
             badgesEarned: 0,
             streakDays: 1,
             unlockedBadges: [],
-            questProgress: {
-                'Recycling Hero': 0 // Example progress
-            },
+            questProgress: {},
             username: null,
             avatar: '👤',
             selectedLevel: null
         };
         let users = JSON.parse(localStorage.getItem('ecoquest-users')) || {};
         let loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
-        let communityPosts = JSON.parse(localStorage.getItem('ecoquest-posts')) || [];
 
         function loadUsers() {
             users = JSON.parse(localStorage.getItem('ecoquest-users')) || {};
@@ -826,149 +1105,6 @@
         function saveUsers() {
             localStorage.setItem('ecoquest-users', JSON.stringify(users));
         }
-
-        function saveProgress() {
-            if (loggedInUser) {
-                users[loggedInUser].state = gameState;
-                saveUsers();
-            }
-        }
-        
-        function loadProgress() {
-            loadUsers();
-            loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
-            if (loggedInUser && users[loggedInUser]) {
-                gameState = users[loggedInUser].state;
-            } else {
-                // Reset to guest state if not logged in
-                gameState = {
-                    ecoPoints: 0,
-                    questsCompleted: 0,
-                    badgesEarned: 0,
-                    streakDays: 1,
-                    unlockedBadges: [],
-                    questProgress: {},
-                    username: null,
-                    avatar: '👤',
-                    selectedLevel: null
-                };
-            }
-            updateUI();
-        }
-
-        // --- Core UI Functions (FIXED/COMPLETED) ---
-
-        /** * FIX: Implemented showNotification function. 
-         */
-        function showNotification(message, duration = 3000) {
-            const notification = document.getElementById('notification');
-            notification.textContent = message;
-            notification.classList.add('show');
-            setTimeout(() => {
-                notification.classList.remove('show');
-            }, duration);
-        }
-
-        function updateUI() {
-            const userDisplay = document.getElementById('user-display');
-            
-            if (loggedInUser) {
-                userDisplay.innerHTML = `
-                    <div class="user-info">
-                        <span class="user-avatar">${gameState.avatar}</span>
-                        <span>👋 Hi, ${loggedInUser}</span>
-                        <span>🌟 ${gameState.ecoPoints}</span>
-                        ${gameState.selectedLevel ? `<span class="difficulty" style="background:#E3F2FD;color:#1565C0;">${getSelectedLevelLabel()}</span>` : ''}
-                        <a href="#" style="text-decoration: none; color: white;" onclick="logout()">🚪 Logout</a>
-                    </div>
-                `;
-                // Update profile section
-                document.getElementById('profile-avatar').textContent = gameState.avatar;
-                document.getElementById('profile-username').textContent = gameState.username;
-                document.getElementById('eco-points').textContent = gameState.ecoPoints;
-                document.getElementById('quests-completed').textContent = gameState.questsCompleted;
-                document.getElementById('badges-earned').textContent = gameState.badgesEarned;
-                document.getElementById('streak-days').textContent = gameState.streakDays;
-                document.getElementById('profile-content').style.display = 'block';
-                document.getElementById('login-prompt').style.display = 'none';
-
-                // Update badges
-                document.querySelectorAll('.badge').forEach(badgeEl => {
-                    const badgeKey = badgeEl.getAttribute('data-badge');
-                    if (gameState.unlockedBadges.includes(badgeKey)) {
-                        badgeEl.classList.remove('locked');
-                    } else {
-                        badgeEl.classList.add('locked');
-                    }
-                });
-
-            } else {
-                userDisplay.innerHTML = `
-                    <a href="#" class="user-stats" onclick="openAuthModal()">
-                        <span>👤 Login/Sign Up</span>
-                    </a>
-                `;
-                document.getElementById('profile-content').style.display = 'none';
-                document.getElementById('login-prompt').style.display = 'block';
-            }
-            
-            // Update quest progress bars
-            for (const quest in gameState.questProgress) {
-                const questEl = document.querySelector(`.quest-card h3:contains('${quest}')`).closest('.quest-card');
-                if (questEl) {
-                    const progressBar = questEl.querySelector('.progress-bar');
-                    const progress = gameState.questProgress[quest];
-                    progressBar.style.width = `${progress}%`;
-                    progressBar.textContent = `${progress}%`;
-                }
-            }
-
-            renderLeaderboard();
-        }
-
-        /**
-         * FIX: showSection logic updated to handle new Community section and dynamic rendering.
-         */
-        function showSection(sectionId) {
-            document.querySelectorAll('section').forEach(section => {
-                section.style.display = 'none';
-            });
-            document.getElementById(sectionId).style.display = 'block';
-
-            if (sectionId === 'profile') {
-                updateUI(); // Ensure profile data is fresh
-                renderIconSelection('#icon-grid'); // Render icon selector for changing avatar
-            } else if (sectionId === 'leaderboard') {
-                renderLeaderboard();
-            } else if (sectionId === 'community') {
-                renderCommunityPosts();
-            }
-            // Navigate to the section hash in the URL for better user experience
-            history.pushState(null, '', `#${sectionId}`);
-        }
-
-        /**
-         * FIX: checkLoginAndRedirect function implemented fully.
-         */
-        function checkLoginAndRedirect() {
-            if (!loggedInUser) {
-                showNotification('You must be logged in to start a mission!', 3000);
-                openAuthModal();
-                return false;
-            }
-            return true;
-        }
-
-        /**
-         * FIX: startAdventure function implemented as a guide.
-         */
-        function startAdventure() {
-            showNotification('Adventure starts now! Head over to the Quests tab to begin your first mission! 🎮', 4000);
-            showSection('quests');
-        }
-
-        // --- Authentication & Profile Functions ---
-        // (These were mostly correct but now rely on the fixed showNotification/updateUI)
 
         function login() {
             const username = document.getElementById('login-username').value;
@@ -979,10 +1115,13 @@
                 loggedInUser = username;
                 localStorage.setItem('loggedInUser', JSON.stringify(loggedInUser));
                 gameState = users[username].state;
+                
+                // If user picked a class level during login, update it
                 if (loginSelectedLevel) {
                     gameState.selectedLevel = loginSelectedLevel;
                     saveProgress();
                 }
+
                 updateUI();
                 closeAuthModal();
                 showNotification(`Welcome back, ${username}!`, 3000);
@@ -1036,16 +1175,40 @@
         function logout() {
             loggedInUser = null;
             localStorage.removeItem('loggedInUser');
-            loadProgress(); // Reset to default guest state
+            gameState = {
+                ecoPoints: 0,
+                questsCompleted: 0,
+                badgesEarned: 0,
+                streakDays: 1,
+                unlockedBadges: [],
+                questProgress: {},
+                username: null,
+                avatar: '👤',
+                selectedLevel: null
+            };
             updateUI();
             showNotification('You have been logged out.', 3000);
             showSection('home');
         }
 
-        function openAuthModal() { document.getElementById('authModal').style.display = 'block'; }
-        function closeAuthModal() { document.getElementById('authModal').style.display = 'none'; }
-        function showLogin() { document.getElementById('login-form').style.display = 'block'; document.getElementById('signup-form').style.display = 'none'; }
-        function showSignup() { document.getElementById('login-form').style.display = 'none'; document.getElementById('signup-form').style.display = 'block'; renderIconSelection('#signup-icon-grid'); }
+        function openAuthModal() {
+            document.getElementById('authModal').style.display = 'block';
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').style.display = 'none';
+        }
+
+        function showLogin() {
+            document.getElementById('login-form').style.display = 'block';
+            document.getElementById('signup-form').style.display = 'none';
+        }
+
+        function showSignup() {
+            document.getElementById('login-form').style.display = 'none';
+            document.getElementById('signup-form').style.display = 'block';
+            renderIconSelection('#signup-icon-grid');
+        }
 
         function renderIconSelection(containerId) {
             const container = document.querySelector(containerId);
@@ -1054,8 +1217,6 @@
                 const iconDiv = document.createElement('div');
                 iconDiv.className = 'icon-option';
                 iconDiv.textContent = icon;
-                // Add a data attribute for easier lookup
-                iconDiv.setAttribute('data-icon', icon); 
                 iconDiv.onclick = () => {
                     document.querySelectorAll(`${containerId} .icon-option`).forEach(el => el.classList.remove('selected'));
                     iconDiv.classList.add('selected');
@@ -1065,10 +1226,15 @@
                 };
                 container.appendChild(iconDiv);
             });
-            // Highlight the currently selected icon
-            const currentIconElement = document.querySelector(`${containerId} .icon-option[data-icon="${gameState.avatar}"]`);
-            if (currentIconElement) {
-                currentIconElement.classList.add('selected');
+
+            if (loggedInUser && containerId === '#icon-grid') {
+                const currentIconElement = Array.from(document.querySelectorAll(`${containerId} .icon-option`)).find(el => el.textContent === gameState.avatar);
+                if (currentIconElement) {
+                    currentIconElement.classList.add('selected');
+                }
+            } else if (containerId === '#signup-icon-grid' && !document.querySelector(`${containerId} .icon-option.selected`)) {
+                // Pre-select the first one for new signups if none is selected
+                document.querySelector(`${containerId} .icon-option`).classList.add('selected');
             }
         }
 
@@ -1081,7 +1247,31 @@
             }
         }
 
-        // --- Level Functions ---
+        function loadProgress() {
+            loadUsers();
+            loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
+            if (loggedInUser && users[loggedInUser]) {
+                gameState = users[loggedInUser].state;
+            } else {
+                // This block is left in for backward compatibility, though all progress is now tied to loggedInUser
+                const saved = localStorage.getItem('ecoquest-progress');
+                if (saved) { 
+                    gameState = { ...gameState, ...JSON.parse(saved) };
+                }
+            }
+            updateUI();
+        }
+
+        function saveProgress() {
+            if (loggedInUser) {
+                users[loggedInUser].state = gameState;
+                saveUsers();
+            } else {
+                 // Save the guest state (less important but good practice)
+                 localStorage.setItem('ecoquest-progress', JSON.stringify(gameState));
+            }
+        }
+
         const levelGroups = {
             'level_1_3': { name: '1st–3rd', icon: '🌱' },
             'level_4_6': { name: '4th–6th', icon: '🌿' },
@@ -1100,352 +1290,600 @@
                 showNotification('Invalid level selection.', 3000);
                 return;
             }
-            if (loggedInUser) {
-                gameState.selectedLevel = levelKey;
-                saveProgress();
-                updateUI();
-            } else {
-                // Allow guest selection for session viewing, but prompt to login for permanent save
-                gameState.selectedLevel = levelKey;
-            }
-            
+            gameState.selectedLevel = levelKey;
+            saveProgress();
+            updateUI();
             const label = getSelectedLevelLabel();
             showNotification(`🎓 Level selected: ${label}`, 3000);
+            // After selecting, guide user to quests
             showSection('quests');
         }
 
-        // --- Leaderboard Functions ---
-
-        function getLeaderboardData() {
-            return Object.values(users)
-                .map(user => ({
-                    username: user.state.username,
-                    points: user.state.ecoPoints,
-                    avatar: user.state.avatar
-                }))
-                .sort((a, b) => b.points - a.points);
-        }
-
-        function renderLeaderboard() {
-            const tbody = document.getElementById('leaderboard-body');
-            tbody.innerHTML = '';
-            const data = getLeaderboardData();
-
-            data.forEach((user, index) => {
-                const rank = index + 1;
-                const row = tbody.insertRow();
-                if (loggedInUser === user.username) {
-                    row.classList.add('user-rank');
-                }
-                
-                row.insertCell().textContent = rank;
-                row.insertCell().innerHTML = `<span class="user-avatar" style="font-size: 1rem; margin-right: 10px;">${user.avatar}</span> ${user.username}`;
-                row.insertCell().textContent = user.points;
-            });
-        }
-        
-        // --- Community Hub Functions (NEW) ---
-
-        function saveCommunityPosts() {
-            localStorage.setItem('ecoquest-posts', JSON.stringify(communityPosts));
-        }
-
-        function submitPost() {
-            if (!checkLoginAndRedirect()) return;
-
-            const postInput = document.getElementById('post-input');
-            const content = postInput.value.trim();
-
-            if (content.length < 5) {
-                showNotification('Your post is too short (min 5 characters).', 3000);
-                return;
-            }
-
-            const newPost = {
-                id: Date.now(),
-                username: loggedInUser,
-                avatar: gameState.avatar,
-                content: content,
-                likes: [],
-                timestamp: new Date().toISOString()
-            };
-
-            communityPosts.unshift(newPost); // Add to the beginning
-            saveCommunityPosts();
-            renderCommunityPosts();
-            postInput.value = '';
-            showNotification('Post shared to the community! 📣', 3000);
-        }
-
-        function toggleLike(postId) {
-            if (!checkLoginAndRedirect()) return;
-
-            const post = communityPosts.find(p => p.id === postId);
-            if (!post) return;
-
-            const userIndex = post.likes.indexOf(loggedInUser);
-
-            if (userIndex === -1) {
-                post.likes.push(loggedInUser); // Like
-                showNotification('Liked post! ❤️', 1500);
-            } else {
-                post.likes.splice(userIndex, 1); // Unlike
-                showNotification('Unliked post.', 1500);
-            }
-
-            saveCommunityPosts();
-            renderCommunityPosts(); // Re-render to update the button state/count
-        }
-
-        function renderCommunityPosts() {
-            const container = document.getElementById('community-posts-container');
-            container.innerHTML = '';
-            
-            if (communityPosts.length === 0) {
-                container.innerHTML = '<p style="text-align: center; color: #777; margin-top: 2rem;">Be the first to share an eco-thought! 🌍</p>';
-                return;
-            }
-
-            communityPosts.forEach(post => {
-                const isLiked = post.likes.includes(loggedInUser);
-                const postDate = new Date(post.timestamp).toLocaleDateString();
-
-                const postElement = document.createElement('div');
-                postElement.className = 'community-post';
-                postElement.innerHTML = `
-                    <div class="post-header">
-                        <span class="post-avatar">${post.avatar}</span>
-                        <span class="post-username">${post.username}</span>
-                    </div>
-                    <div class="post-content">${post.content}</div>
-                    <div class="post-actions">
-                        <button class="like-button ${isLiked ? 'liked' : ''}" onclick="toggleLike(${post.id})">
-                            ${isLiked ? '❤️' : '🤍'} Like (${post.likes.length})
-                        </button>
-                        <span>Posted on: ${postDate}</span>
+        function updateUI() {
+            const userDisplay = document.getElementById('user-display');
+            if (loggedInUser) {
+                userDisplay.innerHTML = `
+                    <div class="user-info">
+                        <span class="user-avatar">${gameState.avatar}</span>
+                        <span>👋 Hi, ${loggedInUser}</span>
+                        <span>🌟 ${gameState.ecoPoints}</span>
+                        ${gameState.selectedLevel ? `<span class="difficulty" style="background:#E3F2FD;color:#1565C0;">${getSelectedLevelLabel()}</span>` : ''}
+                        <a href="#" style="text-decoration: none; color: white;" onclick="logout()">🚪 Logout</a>
                     </div>
                 `;
-                container.appendChild(postElement);
-            });
-        }
-        
-        // --- Game Functions (STUBS/FIXED) ---
+            } else {
+                userDisplay.innerHTML = `
+                    <a href="#" class="user-stats" onclick="openAuthModal()">
+                        <span>👤 Login/Sign Up</span>
+                    </a>
+                `;
+            }
 
-        /** * FIX: Implemented closeGame function to clear content and close modal. 
-         */
+            // Update the profile section visibility
+            const profileContent = document.getElementById('profile-content');
+            const loginPrompt = document.getElementById('login-prompt');
+            if (loggedInUser) {
+                profileContent.style.display = 'block';
+                loginPrompt.style.display = 'none';
+                
+                document.getElementById('profile-avatar').textContent = gameState.avatar;
+                document.getElementById('profile-username').textContent = gameState.username;
+                document.getElementById('eco-points').textContent = gameState.ecoPoints;
+                document.getElementById('quests-completed').textContent = gameState.questsCompleted;
+                document.getElementById('badges-earned').textContent = gameState.badgesEarned;
+                document.getElementById('streak-days').textContent = gameState.streakDays;
+
+                // Update badges
+                document.querySelectorAll('.badge').forEach(badgeEl => {
+                    badgeEl.classList.add('locked'); // Lock all first
+                });
+                gameState.unlockedBadges.forEach(badgeId => {
+                    const badgeElement = document.querySelector(`[data-badge="${badgeId}"]`);
+                    if (badgeElement) {
+                        badgeElement.classList.remove('locked');
+                    }
+                });
+                
+                renderIconSelection('#icon-grid');
+            } else {
+                profileContent.style.display = 'none';
+                loginPrompt.style.display = 'block';
+            }
+
+            updateLeaderboard();
+        }
+
+        function updateLeaderboard() {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            leaderboardBody.innerHTML = '';
+
+            const allPlayers = Object.keys(users).map(username => ({
+                username: username,
+                points: users[username].state.ecoPoints,
+                avatar: users[username].state.avatar || '👤'
+            }));
+
+            allPlayers.sort((a, b) => b.points - a.points);
+
+            allPlayers.slice(0, 10).forEach((player, index) => {
+                const row = document.createElement('tr');
+                if (loggedInUser && player.username === loggedInUser) {
+                    row.classList.add('user-rank');
+                }
+                row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td><span class="user-avatar">${player.avatar}</span> ${player.username}</td>
+                    <td>${player.points}</td>
+                `;
+                leaderboardBody.appendChild(row);
+            });
+
+            // Show current user's rank if not in top 10
+            if (loggedInUser) {
+                const userRank = allPlayers.findIndex(p => p.username === loggedInUser);
+                if (userRank >= 10) {
+                    const separatorRow = document.createElement('tr');
+                    separatorRow.innerHTML = `<td colspan="3" style="text-align: center;">...</td>`;
+                    leaderboardBody.appendChild(separatorRow);
+
+                    const userRow = document.createElement('tr');
+                    userRow.classList.add('user-rank');
+                    userRow.innerHTML = `
+                        <td>${userRank + 1}</td>
+                        <td><span class="user-avatar">${allPlayers[userRank].avatar}</span> ${allPlayers[userRank].username}</td>
+                        <td>${allPlayers[userRank].points}</td>
+                    `;
+                    leaderboardBody.appendChild(userRow);
+                }
+            }
+        }
+
+        // --- Core Utility Functions ---
+        function checkLoginAndRedirect() {
+            if (!loggedInUser) {
+                openAuthModal();
+                showNotification('Please log in or sign up to start a mission.', 3000);
+                return false;
+            }
+            return true;
+        }
+
+        function openGameModal(title, content) {
+            document.getElementById('gameContent').innerHTML = `<h3>${title}</h3>${content}`;
+            document.getElementById('gameModal').style.display = 'block';
+        }
+
         function closeGame() {
             document.getElementById('gameModal').style.display = 'none';
-            document.getElementById('gameContent').innerHTML = '';
+            // Reset Recycling Game state
+            currentItemIndex = 0;
+            correctDrops = 0;
+            // Reset Forest Game state (not strictly needed but good practice)
+            treesPlanted = 0;
+            // Reset Solar Game state
+            housesPowered = 0;
         }
 
-        function openGameModal(title, contentHTML, gameInitFn = null) {
-            const gameContent = document.getElementById('gameContent');
-            gameContent.innerHTML = `<h3>${title}</h3><hr style="margin: 1rem 0;">${contentHTML}`;
-            document.getElementById('gameModal').style.display = 'block';
-            if (gameInitFn) {
-                // Run the game setup function after content is loaded
-                gameInitFn();
-            }
-        }
-
-        /**
-         * FIX: Implemented startRecyclingGame (with game stub)
-         */
-        function startRecyclingGame() {
-            const gameHTML = `
-                <div class="game-area">
-                    <p>Drag the items to the correct bins!</p>
-                    <div class="recycling-bins">
-                        <div class="bin" data-type="paper">
-                            <div class="bin-icon">📄</div>
-                            <div class="bin-label">Paper</div>
-                        </div>
-                        <div class="bin" data-type="plastic">
-                            <div class="bin-icon">🥤</div>
-                            <div class="bin-label">Plastic</div>
-                        </div>
-                        <div class="bin" data-type="glass">
-                            <div class="bin-icon">🍾</div>
-                            <div class="bin-label">Glass</div>
-                        </div>
-                        <div class="bin" data-type="compost">
-                            <div class="bin-icon">🍎</div>
-                            <div class="bin-label">Compost</div>
-                        </div>
-                    </div>
-                    <div class="draggable-items" id="recycling-items">
-                        Loading items...
-                    </div>
-                    <div id="game-status" style="margin-top: 1rem; font-weight: bold; color: #FF6B35;"></div>
-                    <button class="cta-button" style="margin-top: 2rem;" onclick="closeGame()">Finish Game (Stub)</button>
-                </div>
-            `;
-            openGameModal('Recycling Hero Mission', gameHTML, initializeRecyclingGame);
-        }
-
-        /**
-         * FIX: Implemented initializeRecyclingGame (as a stub)
-         */
-        function initializeRecyclingGame() {
-            const items = [
-                { emoji: '📰', type: 'paper' },
-                { emoji: '🧴', type: 'plastic' },
-                { emoji: '🍌', type: 'compost' },
-                { emoji: '📦', type: 'paper' },
-                { emoji: '🥛', type: 'glass' },
-            ];
-
-            const container = document.getElementById('recycling-items');
-            container.innerHTML = '';
-            
-            items.forEach(item => {
-                const itemEl = document.createElement('div');
-                itemEl.className = 'draggable-item';
-                itemEl.textContent = item.emoji;
-                itemEl.draggable = true;
-                itemEl.setAttribute('data-type', item.type);
-                container.appendChild(itemEl);
+        function showSection(sectionId) {
+            document.querySelectorAll('section').forEach(section => {
+                section.style.display = 'none';
             });
-            
-            // Note: Full drag-and-drop logic is complex. This is a visual stub.
-            document.getElementById('game-status').textContent = 'Drag-and-drop is a stub. Click "Finish Game" to complete the quest.';
+            document.getElementById(sectionId).style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        /**
-         * FIX: Implemented startForestGame (stub)
-         */
-        function startForestGame() {
-            const gameHTML = `
-                <div class="game-area">
-                    <p>Plant trees and save animals! (Game in progress)</p>
-                    <div style="font-size: 5rem; margin: 2rem;">🌳🐼</div>
-                    <p>This mission will be about identifying local trees and planting virtual seeds.</p>
-                    <button class="cta-button" style="margin-top: 2rem;" onclick="completeQuest('Forest Guardian', 50)">Complete Quest (Stub)</button>
-                </div>
-            `;
-            openGameModal('Forest Guardian Mission', gameHTML);
+        function startAdventure() {
+            showSection('quests');
         }
 
-        /**
-         * FIX: Implemented startSolarGame (stub)
-         */
-        function startSolarGame() {
-            const gameHTML = `
-                <div class="game-area">
-                    <p>Design a city with solar and wind power! (Game in progress)</p>
-                    <div style="font-size: 5rem; margin: 2rem;">☀️🏙️</div>
-                    <p>This mission will involve placing renewable energy sources on a map to meet power demand.</p>
-                    <button class="cta-button" style="margin-top: 2rem;" onclick="completeQuest('Solar City Builder', 100)">Complete Quest (Stub)</button>
-                </div>
-            `;
-            openGameModal('Solar City Builder Mission', gameHTML);
+        function showNotification(message, duration = 3000) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.classList.add('show');
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, duration);
         }
 
-        // A function to simulate quest completion (for stubs)
-        function completeQuest(questName, points) {
-            if (loggedInUser) {
-                gameState.ecoPoints += points;
-                gameState.questsCompleted += 1;
-                gameState.questProgress[questName] = 100; // Mark as 100% complete
-                // Example badge unlock
-                if (questName === 'Recycling Hero' && !gameState.unlockedBadges.includes('recycling-novice')) {
-                    gameState.unlockedBadges.push('recycling-novice');
-                    gameState.badgesEarned += 1;
-                    showNotification('🏅 New Badge Unlocked: Recycling Novice!', 4000);
-                }
+        function addEcoPoints(points) {
+            gameState.ecoPoints += points;
+            saveProgress();
+            updateUI();
+        }
+
+        function addQuestCompleted() {
+            gameState.questsCompleted += 1;
+            saveProgress();
+            updateUI();
+        }
+        
+        function unlockBadge(badgeId) {
+            if (!gameState.unlockedBadges.includes(badgeId)) {
+                gameState.unlockedBadges.push(badgeId);
+                gameState.badgesEarned = gameState.unlockedBadges.length;
                 saveProgress();
                 updateUI();
-                showNotification(`Mission Complete! Earned ${points} Eco-Points! 🌟`, 5000);
+                const badgeElement = document.querySelector(`[data-badge="${badgeId}"]`);
+                if (badgeElement) {
+                    showNotification(`🏅 Badge Unlocked: ${badgeElement.querySelector('.badge-name').textContent}!`, 3000);
+                }
             }
-            closeGame();
         }
 
-        // --- Learn Functions (STUBS/FIXED) ---
-
+        function celebrate() {
+            const celebration = document.getElementById('celebration');
+            const confettiEmojis = ['✨', '🌟', '🎉', '🎊', '🥳', '🎈'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                celebration.appendChild(confetti);
+            }
+            
+            setTimeout(() => {
+                celebration.innerHTML = '';
+            }, 5000);
+        }
+        
+        // --- Learn Section Modals (Stubbed with content) ---
         function showClimateChangeInfo() {
             const content = `
                 <div class="learning-content">
-                    <h3>What is Climate Change?</h3>
-                    <p>Climate change refers to long-term shifts in temperatures and weather patterns. Since the 1800s, human activities like burning fossil fuels have been the main driver of climate change, primarily due to the emission of heat-trapping gases.</p>
-                    <p>Key topics:</p>
+                    <h3>What is Climate Change? 🌍</h3>
+                    <p>Climate change is the long-term shift in temperatures and weather patterns. While some changes are natural, the current rapid warming is largely caused by human activities, primarily from burning fossil fuels like coal, oil, and gas, which release **greenhouse gases** (like Carbon Dioxide) into the atmosphere.</p>
+                    
+                    <h4>How We Can Help:</h4>
                     <ul>
-                        <li>The Greenhouse Effect (CO2 and Methane)</li>
-                        <li>Melting Ice Caps and Sea Level Rise</li>
-                        <li>Extreme Weather Events</li>
+                        <li>**Reduce Energy Use:** Turn off lights and unplug electronics.</li>
+                        <li>**Use Public Transport:** Walk, bike, or take the bus instead of driving.</li>
+                        <li>**Support Renewable Energy:** Advocate for solar and wind power.</li>
                     </ul>
+                    
                     <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/dcxI7l70U8I" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                        <iframe src="https://www.youtube.com/embed/gqR1R67kH9o" allowfullscreen></iframe>
                     </div>
                 </div>
             `;
-            openGameModal('🌍 Climate Change Basics', content);
+            openGameModal('📚 Climate Change Basics', content);
         }
-
+        
         function showWildlifeInfo() {
-            const content = `
+             const content = `
                 <div class="learning-content">
-                    <h3>Wildlife Conservation</h3>
-                    <p>Conservation is the act of protecting animal and plant species and their habitats. Loss of habitat, pollution, and climate change are the biggest threats to wildlife.</p>
-                    <p>How you can help:</p>
+                    <h3>Protecting Our Wild Friends 🐼</h3>
+                    <p>Wildlife conservation is the practice of protecting animal species and their habitats. Many species are becoming endangered due to habitat loss (deforestation), pollution, and climate change.</p>
+                    
+                    <h4>Simple Actions You Can Take:</h4>
                     <ul>
-                        <li>Reduce, Reuse, Recycle to minimize waste.</li>
-                        <li>Support wildlife protection organizations.</li>
-                        <li>Plant native plants in your yard.</li>
+                        <li>**Reduce Plastic:** Keep plastics out of oceans and forests.</li>
+                        <li>**Plant Native Species:** Grow plants that local insects and animals rely on.</li>
+                        <li>**Support Sanctuaries:** Support organizations that protect wildlife habitats.</li>
                     </ul>
-                    <p>Every small action helps protect endangered species like the Giant Panda 🐼 and the Sea Turtle 🐢.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/N0y7eXvjYkQ" allowfullscreen></iframe>
+                    </div>
                 </div>
             `;
-            openGameModal('🐼 Wildlife Conservation', content);
+            openGameModal('📚 Wildlife Conservation', content);
+        }
+        
+        function showOceanInfo() {
+             const content = `
+                <div class="learning-content">
+                    <h3>Deep Dive: Ocean Protection 🌊</h3>
+                    <p>Our oceans cover over 70% of the Earth and are vital for life. They absorb massive amounts of CO2, but face severe threats from plastic pollution, oil spills, and overfishing, which disrupt fragile marine ecosystems like coral reefs.</p>
+                    
+                    <h4>Be an Ocean Hero:</h4>
+                    <ul>
+                        <li>**Choose Sustainable Seafood:** Look for products from sustainable fisheries.</li>
+                        <li>**Organize Beach Cleanups:** Participate in local cleanups.</li>
+                        <li>**Avoid Single-Use Plastics:** Every plastic bag you skip helps the sea!</li>
+                    </ul>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/B8Xb1_5D42g" allowfullscreen></iframe>
+                    </div>
+                </div>
+            `;
+            openGameModal('📚 Ocean Protection', content);
+        }
+        
+        // --- GAME LOGIC START ---
+
+        // ** RECYCLING HERO QUEST (Drag and Drop) **
+        const recyclingItems = [
+            { item: 'Plastic Bottle', type: 'Plastic' },
+            { item: 'Newspaper', type: 'Paper' },
+            { item: 'Glass Jar', type: 'Glass' },
+            { item: 'Banana Peel', type: 'Organic' },
+            { item: 'Aluminium Can', type: 'Metal' },
+            { item: 'Cardboard Box', type: 'Paper' },
+            { item: 'Yogurt Cup', type: 'Plastic' }
+        ];
+        const recyclingBins = {
+            'Plastic': { label: 'Plastic', icon: '♳', color: '#FFEB3B' },
+            'Paper': { label: 'Paper', icon: '📰', color: '#2196F3' },
+            'Glass': { label: 'Glass', icon: '🍾', color: '#4CAF50' },
+            'Organic': { label: 'Organic', icon: '🍎', color: '#795548' },
+            'Metal': { label: 'Metal', icon: '🔩', color: '#9E9E9E' }
+        };
+        let currentItemIndex = 0;
+        let correctDrops = 0;
+        let totalItems = 5; // The number of items the user needs to sort to pass
+        let dragItem = null;
+
+        function startRecyclingGame() {
+            currentItemIndex = 0;
+            correctDrops = 0;
+            initializeRecyclingGame();
         }
 
-        function showOceanInfo() {
-            const content = `
-                <div class="learning-content">
-                    <h3>Ocean Protection</h3>
-                    <p>The ocean covers over 70% of our planet and provides half of the oxygen we breathe. However, it is under threat from plastic pollution and acidification.</p>
-                    <p>Key facts:</p>
-                    <ul>
-                        <li>Microplastics are harmful to marine life.</li>
-                        <li>Coral reefs are dying due to rising sea temperatures.</li>
-                        <li>Sustainable fishing is crucial for ecosystem health.</li>
-                    </ul>
-                    <p>Let's work together to keep our oceans clean and healthy! 🌊</p>
+        function initializeRecyclingGame() {
+            const gameContent = `
+                <p>Drag the item to the correct bin! Correctly sort ${totalItems} items to complete the quest.</p>
+                <div class="progress-container" style="width: 80%; margin: 1rem auto;">
+                    <div id="recycling-progress-bar" class="progress-bar" style="width: 0%">0/${totalItems}</div>
+                </div>
+                <div id="item-to-sort" style="font-size: 2.5rem; font-weight: bold; margin: 2rem 0;"></div>
+                <div id="recycling-bins" class="recycling-bins">
+                    ${Object.keys(recyclingBins).map(type => `
+                        <div class="bin" data-type="${type}" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
+                            <span class="bin-icon" style="color: ${recyclingBins[type].color};">${recyclingBins[type].icon}</span>
+                            <span class="bin-label">${recyclingBins[type].label}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <div id="draggable-item-container" class="draggable-items"></div>
+            `;
+            openGameModal('♻️ Recycling Hero Quest', gameContent);
+            loadNextRecyclingItem();
+
+            // Re-attach drop listeners (important for dynamic content)
+            document.querySelectorAll('.bin').forEach(bin => {
+                bin.addEventListener('dragover', (e) => e.preventDefault());
+                bin.addEventListener('drop', handleDrop);
+                bin.addEventListener('dragenter', (e) => bin.classList.add('highlight'));
+                bin.addEventListener('dragleave', (e) => bin.classList.remove('highlight'));
+            });
+        }
+
+        function loadNextRecyclingItem() {
+            if (correctDrops >= totalItems) {
+                completeRecyclingQuest();
+                return;
+            }
+
+            // Cycle through items, but limit to totalItems completions
+            const item = recyclingItems[currentItemIndex % recyclingItems.length];
+            document.getElementById('item-to-sort').textContent = item.item;
+
+            const container = document.getElementById('draggable-item-container');
+            container.innerHTML = `
+                <div class="draggable-item" draggable="true" data-type="${item.type}">
+                    ${item.item}
                 </div>
             `;
-            openGameModal('🌊 Ocean Protection', content);
+            dragItem = container.querySelector('.draggable-item');
+            dragItem.addEventListener('dragstart', handleDragStart);
+
+            // Increment index for the next item
+            currentItemIndex++;
+        }
+
+        function handleDragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.dataset.type);
+            e.target.classList.add('dragging');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            const itemType = e.dataTransfer.getData('text/plain');
+            const binType = e.currentTarget.dataset.type;
+            const binElement = e.currentTarget;
+
+            // Remove dragging class from the item and highlight from the bin
+            const itemElement = document.getElementById('draggable-item-container').querySelector('.draggable-item');
+            if(itemElement) itemElement.classList.remove('dragging');
+            binElement.classList.remove('highlight');
+
+            if (itemType === binType) {
+                correctDrops++;
+                showNotification(`✅ Correct! You recycled the ${itemType} item.`, 1500);
+                binElement.classList.add('success-animation');
+                setTimeout(() => binElement.classList.remove('success-animation'), 500);
+
+                // Update progress bar
+                const progressBar = document.getElementById('recycling-progress-bar');
+                const percentage = (correctDrops / totalItems) * 100;
+                progressBar.style.width = `${percentage}%`;
+                progressBar.textContent = `${correctDrops}/${totalItems}`;
+
+                // Remove the dragged item
+                document.getElementById('draggable-item-container').innerHTML = '';
+
+                loadNextRecyclingItem();
+            } else {
+                showNotification(`❌ Incorrect! A ${itemType} item does not go into the ${binType} bin. Try again.`, 2000);
+                // The draggable item is still there, user can try again
+            }
+        }
+
+        function completeRecyclingQuest() {
+            addEcoPoints(50);
+            showNotification('🥳 Quest Completed! You earned the Recycling Novice badge!', 4000);
+            unlockBadge('recycling-novice');
+            addQuestCompleted();
+            celebrate();
+            // Clear all event listeners on bins to prevent multiple triggers after game over
+            document.querySelectorAll('.bin').forEach(bin => {
+                bin.removeEventListener('drop', handleDrop);
+                bin.removeEventListener('dragover', (e) => e.preventDefault());
+                bin.removeEventListener('dragenter', (e) => bin.classList.add('highlight'));
+                bin.removeEventListener('dragleave', (e) => bin.classList.remove('highlight'));
+            });
+            setTimeout(closeGame, 2000);
+        }
+        
+        // ** FOREST GUARDIAN QUEST (Click to Plant) **
+        let treesPlanted = 0;
+        const totalTrees = 10;
+        const forestGridSize = 25; // 5x5 grid
+
+        function startForestGame() {
+            treesPlanted = 0;
+            openGameModal('🌳 Forest Guardian Quest', '<h3>Plant the Trees!</h3><p>Click on the empty spots (x) to plant new trees (🌳) and save the forest! Plant 10 trees to complete the quest.</p><div id="forest-game-area" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 300px; margin: 20px auto;"></div><p id="trees-planted-count">Trees Planted: 0/10</p>');
+            initializeForestGame();
+        }
+
+        function initializeForestGame() {
+            const forestArea = document.getElementById('forest-game-area');
+            forestArea.innerHTML = '';
+            
+            for (let i = 0; i < forestGridSize; i++) {
+                const spot = document.createElement('div');
+                spot.style.width = '50px';
+                spot.style.height = '50px';
+                spot.style.border = '2px dashed #8BC34A';
+                spot.style.borderRadius = '5px';
+                spot.style.cursor = 'pointer';
+                spot.style.display = 'flex';
+                spot.style.alignItems = 'center';
+                spot.style.justifyContent = 'center';
+                spot.style.fontSize = '2rem';
+                spot.textContent = 'x'; // Placeholder for an empty spot
+                spot.onclick = plantTree;
+                forestArea.appendChild(spot);
+            }
+            updateForestStatus();
+        }
+
+        function plantTree(event) {
+            if (treesPlanted < totalTrees && event.target.textContent === 'x') {
+                event.target.textContent = '🌳';
+                event.target.style.border = 'none';
+                event.target.style.background = 'none';
+                event.target.onclick = null; // Prevent planting another tree on the same spot
+                treesPlanted++;
+                updateForestStatus();
+                showNotification('💚 Tree planted!', 1000);
+                
+                if (treesPlanted === totalTrees) {
+                    completeForestQuest();
+                }
+            }
+        }
+
+        function updateForestStatus() {
+            document.getElementById('trees-planted-count').textContent = `Trees Planted: ${treesPlanted}/${totalTrees}`;
+        }
+
+        function completeForestQuest() {
+            addEcoPoints(75);
+            showNotification('🎉 Quest Completed! You earned the Tree Planter badge!', 4000);
+            unlockBadge('tree-planter');
+            addQuestCompleted();
+            celebrate();
+            setTimeout(closeGame, 2000);
+        }
+
+        // ** SOLAR CITY BUILDER QUEST (Drag and Drop) **
+        let housesPowered = 0;
+        const totalHouses = 3;
+
+        function startSolarGame() {
+            housesPowered = 0;
+            openGameModal('☀️ Solar City Builder', '<h3>Power Up the City!</h3><p>Drag solar panels onto the rooftops of the three houses to power the city. (Drag & Drop)</p><div id="solar-game-area" style="padding: 2rem; text-align: center;"><div id="houses-container" style="display: flex; justify-content: space-around; margin-bottom: 2rem;"></div><div id="panels-container" style="display: flex; justify-content: center; gap: 1rem;"></div><p id="solar-status">Houses Powered: 0/3</p></div>');
+            initializeSolarGame();
+        }
+
+        function initializeSolarGame() {
+            const housesContainer = document.getElementById('houses-container');
+            const panelsContainer = document.getElementById('panels-container');
+            housesContainer.innerHTML = '';
+            panelsContainer.innerHTML = '';
+
+            // Create houses (drop zones)
+            for (let i = 1; i <= totalHouses; i++) {
+                const house = document.createElement('div');
+                house.className = 'bin'; // Reusing bin style for drop zone
+                house.style.width = '120px';
+                house.style.height = '120px';
+                house.style.border = '3px dashed #FF9800';
+                house.style.borderRadius = '10px';
+                house.style.margin = '0 10px';
+                house.dataset.houseId = i;
+                house.dataset.powered = 'false';
+                house.innerHTML = '<span class="bin-icon">🏠</span><span class="bin-label">House ' + i + '</span>';
+                
+                // Add drag/drop listeners
+                house.addEventListener('dragover', (e) => e.preventDefault());
+                house.addEventListener('drop', handleSolarDrop);
+                house.addEventListener('dragenter', (e) => house.classList.add('highlight'));
+                house.addEventListener('dragleave', (e) => house.classList.remove('highlight'));
+                
+                housesContainer.appendChild(house);
+            }
+
+            // Create solar panels (draggable items)
+            for (let i = 0; i < totalHouses; i++) {
+                const panel = document.createElement('div');
+                panel.className = 'draggable-item';
+                panel.textContent = '☀️ Solar Panel';
+                panel.dataset.panelId = i;
+                panel.draggable = true;
+                
+                panel.addEventListener('dragstart', handleSolarDragStart);
+                panelsContainer.appendChild(panel);
+            }
+            updateSolarStatus();
+        }
+
+        function handleSolarDragStart(e) {
+            e.dataTransfer.setData('text/plain', 'solar-panel');
+            e.target.dataset.draggedId = e.target.dataset.panelId; // Store unique ID
+            e.target.classList.add('dragging');
+        }
+
+        function handleSolarDrop(e) {
+            e.preventDefault();
+            const data = e.dataTransfer.getData('text/plain');
+            const houseElement = e.currentTarget;
+            
+            // Remove dragging class from all panels and highlight from the bin
+            document.querySelectorAll('#panels-container .draggable-item').forEach(panel => panel.classList.remove('dragging'));
+            houseElement.classList.remove('highlight');
+
+            if (data === 'solar-panel' && houseElement.dataset.powered === 'false') {
+                houseElement.dataset.powered = 'true';
+                houseElement.style.border = '3px solid #4CAF50';
+                houseElement.innerHTML = '<span class="bin-icon">🏠⚡️</span><span class="bin-label">Powered!</span>';
+                houseElement.classList.add('success-animation');
+                setTimeout(() => houseElement.classList.remove('success-animation'), 500);
+
+                housesPowered++;
+                showNotification(`✅ House ${houseElement.dataset.houseId} powered!`, 1500);
+                
+                // Find and remove the draggable panel that was used
+                const panelsContainer = document.getElementById('panels-container');
+                const panelToRemove = document.querySelector(`[data-panel-id="${e.dataTransfer.getData('draggedId')}"]`);
+                
+                // This is a simplified removal, based on which one the browser "thinks" was dragged
+                const allPanels = panelsContainer.querySelectorAll('.draggable-item');
+                if (allPanels.length > 0) {
+                    allPanels[0].remove();
+                }
+
+                updateSolarStatus();
+                
+                if (housesPowered === totalHouses) {
+                    completeSolarQuest();
+                }
+            } else if (houseElement.dataset.powered === 'true') {
+                showNotification('This house is already powered!', 1500);
+            } else {
+                showNotification('❌ Wrong item. Only solar panels will work!', 1500);
+            }
+        }
+
+        function updateSolarStatus() {
+            document.getElementById('solar-status').textContent = `Houses Powered: ${housesPowered}/${totalHouses}`;
+        }
+
+        function completeSolarQuest() {
+            addEcoPoints(100);
+            showNotification('🌟 Quest Completed! You earned the Energy Saver badge!', 4000);
+            unlockBadge('energy-saver');
+            addQuestCompleted();
+            celebrate();
+            setTimeout(closeGame, 2000);
         }
 
 
         // --- Initialization ---
-
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', (event) => {
             loadProgress();
 
-            // Set default view to home, or based on hash in URL
-            const initialSection = window.location.hash ? window.location.hash.substring(1) : 'home';
-            // Show section only if it's a valid ID
-            if (document.getElementById(initialSection)) {
-                showSection(initialSection);
-            } else {
-                showSection('home');
-            }
-
-            // Add dynamic floating elements
-            const floatingContainer = document.querySelector('.floating-elements');
-            const newElements = ['🦋', '🐝', '🌺', '🌸'];
-            newElements.forEach((emoji, index) => {
-                const element = document.createElement('div');
-                element.className = 'leaf';
-                element.textContent = emoji;
-                element.style.left = Math.random() * 80 + '%';
-                element.style.top = Math.random() * 80 + '%';
-                element.style.animationDelay = index * 1.5 + 's';
-                floatingContainer.appendChild(element);
-            });
+            // Add extra floating elements for visual effect
+            setTimeout(() => {
+                const floatingContainer = document.querySelector('.floating-elements');
+                const newElements = ['🦋', '🐝', '🌺', '🌸'];
+                newElements.forEach((emoji, index) => {
+                    const element = document.createElement('div');
+                    element.className = 'leaf';
+                    element.textContent = emoji;
+                    element.style.left = Math.random() * 80 + '%';
+                    element.style.top = Math.random() * 80 + '%';
+                    element.style.animationDelay = index * 1.5 + 's';
+                    floatingContainer.appendChild(element);
+                });
+            }, 2000);
             
             if (loggedInUser) {
                 showNotification(`Welcome back, ${loggedInUser}!`, 4000);
-            } else if (localStorage.getItem('ecoquest-users') === null) {
+            } else if (localStorage.getItem('ecoquest-progress') === null) {
                 setTimeout(() => {
                     showNotification('🌱 Welcome to Eco-Quest! Start your green adventure today!', 4000);
                 }, 1000);
@@ -1455,6 +1893,9 @@
         document.addEventListener('dragend', function() {
             document.querySelectorAll('.bin').forEach(bin => {
                 bin.classList.remove('highlight');
+            });
+            document.querySelectorAll('.draggable-item').forEach(item => {
+                item.classList.remove('dragging');
             });
         });
 
