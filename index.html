@@ -963,7 +963,6 @@
                         <div class="stat-label">🔥 Day Streak</div>
                     </div>
                 </div>
-                
                 <div class="badges-container">
                     <h3>🏅 Your Eco-Badges</h3>
                     <div class="badges-grid">
@@ -993,19 +992,17 @@
                         </div>
                     </div>
                 </div>
-                
                 <div class="icon-selection">
                     <h3>🎨 Choose Your Profile Icon</h3>
                     <div class="icon-grid" id="icon-grid"></div>
                 </div>
             </div>
         </div>
-        
         <div id="login-prompt" style="display: none; text-align: center; margin-top: 50px;">
             <p style="font-size: 1.5rem; color: #555;">Please log in or sign up to view your profile and track your progress!</p>
         </div>
     </section>
-    
+
     <section id="leaderboard" class="section" style="display: none;">
         <h2>🏆 Eco-Quest Leaderboard</h2>
         <table class="leaderboard-table">
@@ -1032,12 +1029,10 @@
         <div class="modal-content">
             <span class="close" onclick="closeAuthModal()">&times;</span>
             <div id="authContent" class="auth-container">
-                
                 <div id="login-form">
                     <h3>Log In</h3>
                     <input type="text" id="login-username" placeholder="Username" required>
                     <input type="password" id="login-password" placeholder="Password" required>
-                    
                     <label for="login-class" style="margin-top: 0.5rem; color:#2E7D32; font-weight:bold;">Class Level (optional)</label>
                     <select id="login-class">
                         <option value="">Select class level (optional)</option>
@@ -1046,16 +1041,13 @@
                         <option value="level_7_9">🌳 7th–9th Class</option>
                         <option value="level_10_12">☀️ 10th–12th Class</option>
                     </select>
-
                     <button onclick="login()">Log In</button>
                     <p>Don't have an account? <span class="switch-auth" onclick="showSignup()">Sign Up</span></p>
                 </div>
-
                 <div id="signup-form" style="display: none;">
                     <h3>Sign Up</h3>
                     <input type="text" id="signup-username" placeholder="Username" required>
                     <input type="password" id="signup-password" placeholder="Password" required>
-                    
                     <label for="signup-class" style="margin-top: 0.5rem; color:#2E7D32; font-weight:bold;">Select Your Class Level</label>
                     <select id="signup-class" required>
                         <option value="">Select your class level</option>
@@ -1064,12 +1056,10 @@
                         <option value="level_7_9">🌳 7th–9th Class</option>
                         <option value="level_10_12">☀️ 10th–12th Class</option>
                     </select>
-                    
                     <div class="icon-selection">
                         <h4>Choose an Avatar</h4>
                         <div class="icon-grid" id="signup-icon-grid"></div>
                     </div>
-                    
                     <button onclick="signup()">Sign Up</button>
                     <p>Already have an account? <span class="switch-auth" onclick="showLogin()">Log In</span></p>
                 </div>
@@ -1083,7 +1073,6 @@
     <script>
         const profileIcons = ['🌳', '♻️', '☀️', '🐼', '🌊', '🌱', '🌍', '🦋', '🐝', '🦊', '🐿️', '🦌', '🦜'];
 
-        // --- State Management ---
         let gameState = {
             ecoPoints: 0,
             questsCompleted: 0,
@@ -1095,6 +1084,7 @@
             avatar: '👤',
             selectedLevel: null
         };
+        
         let users = JSON.parse(localStorage.getItem('ecoquest-users')) || {};
         let loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
 
@@ -1140,14 +1130,17 @@
                 showNotification('Username already exists. Please choose another.', 3000);
                 return;
             }
+
             if (username.length < 3 || password.length < 3) {
                 showNotification('Username and password must be at least 3 characters.', 3000);
                 return;
             }
+            
             if (!selectedIcon) {
                 showNotification('Please select a profile icon.', 3000);
                 return;
             }
+            
             if (!signupSelectedLevel) {
                 showNotification('Please select your class level.', 3000);
                 return;
@@ -1167,6 +1160,7 @@
                     selectedLevel: signupSelectedLevel
                 }
             };
+
             saveUsers();
             showLogin();
             showNotification('Sign up successful! You can now log in.', 3000);
@@ -1213,6 +1207,7 @@
         function renderIconSelection(containerId) {
             const container = document.querySelector(containerId);
             container.innerHTML = '';
+
             profileIcons.forEach(icon => {
                 const iconDiv = document.createElement('div');
                 iconDiv.className = 'icon-option';
@@ -1220,20 +1215,20 @@
                 iconDiv.onclick = () => {
                     document.querySelectorAll(`${containerId} .icon-option`).forEach(el => el.classList.remove('selected'));
                     iconDiv.classList.add('selected');
-                    if (loggedInUser && containerId === '#icon-grid') {
+                    
+                    if (loggedInUser) {
                         setProfileIcon(icon);
                     }
                 };
                 container.appendChild(iconDiv);
             });
 
-            if (loggedInUser && containerId === '#icon-grid') {
-                const currentIconElement = Array.from(document.querySelectorAll(`${containerId} .icon-option`)).find(el => el.textContent === gameState.avatar);
+            if (loggedInUser) {
+                const currentIconElement = document.querySelector(`${containerId} .icon-option[data-icon="${gameState.avatar}"]`);
                 if (currentIconElement) {
                     currentIconElement.classList.add('selected');
                 }
-            } else if (containerId === '#signup-icon-grid' && !document.querySelector(`${containerId} .icon-option.selected`)) {
-                // Pre-select the first one for new signups if none is selected
+            } else {
                 document.querySelector(`${containerId} .icon-option`).classList.add('selected');
             }
         }
@@ -1250,12 +1245,14 @@
         function loadProgress() {
             loadUsers();
             loggedInUser = JSON.parse(localStorage.getItem('loggedInUser')) || null;
+
             if (loggedInUser && users[loggedInUser]) {
                 gameState = users[loggedInUser].state;
             } else {
-                // This block is left in for backward compatibility, though all progress is now tied to loggedInUser
                 const saved = localStorage.getItem('ecoquest-progress');
-                if (saved) { 
+                if (saved) {
+                    // This is for a guest state, which we are no longer using for progress.
+                    // This can be kept as a fallback but the main logic is for loggedInUser.
                     gameState = { ...gameState, ...JSON.parse(saved) };
                 }
             }
@@ -1266,9 +1263,6 @@
             if (loggedInUser) {
                 users[loggedInUser].state = gameState;
                 saveUsers();
-            } else {
-                 // Save the guest state (less important but good practice)
-                 localStorage.setItem('ecoquest-progress', JSON.stringify(gameState));
             }
         }
 
@@ -1308,120 +1302,84 @@
                         <span>👋 Hi, ${loggedInUser}</span>
                         <span>🌟 ${gameState.ecoPoints}</span>
                         ${gameState.selectedLevel ? `<span class="difficulty" style="background:#E3F2FD;color:#1565C0;">${getSelectedLevelLabel()}</span>` : ''}
-                        <a href="#" style="text-decoration: none; color: white;" onclick="logout()">🚪 Logout</a>
+                        <a href="#" style="color:white; text-decoration:none;" onclick="logout()">[Logout]</a>
                     </div>
                 `;
-            } else {
-                userDisplay.innerHTML = `
-                    <a href="#" class="user-stats" onclick="openAuthModal()">
-                        <span>👤 Login/Sign Up</span>
-                    </a>
-                `;
-            }
-
-            // Update the profile section visibility
-            const profileContent = document.getElementById('profile-content');
-            const loginPrompt = document.getElementById('login-prompt');
-            if (loggedInUser) {
-                profileContent.style.display = 'block';
-                loginPrompt.style.display = 'none';
-                
                 document.getElementById('profile-avatar').textContent = gameState.avatar;
                 document.getElementById('profile-username').textContent = gameState.username;
                 document.getElementById('eco-points').textContent = gameState.ecoPoints;
                 document.getElementById('quests-completed').textContent = gameState.questsCompleted;
                 document.getElementById('badges-earned').textContent = gameState.badgesEarned;
                 document.getElementById('streak-days').textContent = gameState.streakDays;
-
-                // Update badges
-                document.querySelectorAll('.badge').forEach(badgeEl => {
-                    badgeEl.classList.add('locked'); // Lock all first
-                });
-                gameState.unlockedBadges.forEach(badgeId => {
-                    const badgeElement = document.querySelector(`[data-badge="${badgeId}"]`);
-                    if (badgeElement) {
-                        badgeElement.classList.remove('locked');
+                document.getElementById('profile-content').style.display = 'block';
+                document.getElementById('login-prompt').style.display = 'none';
+                
+                // Update Badges
+                document.querySelectorAll('.badge').forEach(badge => {
+                    const badgeKey = badge.dataset.badge;
+                    if (gameState.unlockedBadges.includes(badgeKey)) {
+                        badge.classList.remove('locked');
+                    } else {
+                        badge.classList.add('locked');
                     }
                 });
-                
-                renderIconSelection('#icon-grid');
-            } else {
-                profileContent.style.display = 'none';
-                loginPrompt.style.display = 'block';
-            }
 
+                // Update Quest Progress Bars
+                document.querySelectorAll('#quests .quest-card').forEach(card => {
+                    const questId = card.querySelector('h3').textContent.replace(/\s/g, '');
+                    const progress = gameState.questProgress[questId] || 0;
+                    const progressBar = card.querySelector('.progress-bar');
+                    progressBar.style.width = `${progress}%`;
+                    progressBar.textContent = `${progress}%`;
+                });
+
+                // Render icon selection for profile update
+                renderIconSelection('#icon-grid');
+
+            } else {
+                userDisplay.innerHTML = `
+                    <a href="#" class="user-stats" onclick="openAuthModal()">
+                        <span>👤 Login/Sign Up</span>
+                    </a>
+                `;
+                if (document.getElementById('profile').style.display === 'block') {
+                    document.getElementById('profile-content').style.display = 'none';
+                    document.getElementById('login-prompt').style.display = 'block';
+                }
+            }
+            
             updateLeaderboard();
         }
 
-        function updateLeaderboard() {
-            const leaderboardBody = document.getElementById('leaderboard-body');
-            leaderboardBody.innerHTML = '';
-
-            const allPlayers = Object.keys(users).map(username => ({
-                username: username,
-                points: users[username].state.ecoPoints,
-                avatar: users[username].state.avatar || '👤'
-            }));
-
-            allPlayers.sort((a, b) => b.points - a.points);
-
-            allPlayers.slice(0, 10).forEach((player, index) => {
-                const row = document.createElement('tr');
-                if (loggedInUser && player.username === loggedInUser) {
-                    row.classList.add('user-rank');
-                }
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td><span class="user-avatar">${player.avatar}</span> ${player.username}</td>
-                    <td>${player.points}</td>
-                `;
-                leaderboardBody.appendChild(row);
-            });
-
-            // Show current user's rank if not in top 10
-            if (loggedInUser) {
-                const userRank = allPlayers.findIndex(p => p.username === loggedInUser);
-                if (userRank >= 10) {
-                    const separatorRow = document.createElement('tr');
-                    separatorRow.innerHTML = `<td colspan="3" style="text-align: center;">...</td>`;
-                    leaderboardBody.appendChild(separatorRow);
-
-                    const userRow = document.createElement('tr');
-                    userRow.classList.add('user-rank');
-                    userRow.innerHTML = `
-                        <td>${userRank + 1}</td>
-                        <td><span class="user-avatar">${allPlayers[userRank].avatar}</span> ${allPlayers[userRank].username}</td>
-                        <td>${allPlayers[userRank].points}</td>
-                    `;
-                    leaderboardBody.appendChild(userRow);
-                }
-            }
-        }
-
-        // --- Core Utility Functions ---
         function checkLoginAndRedirect() {
             if (!loggedInUser) {
-                openAuthModal();
                 showNotification('Please log in or sign up to start a mission.', 3000);
+                openAuthModal();
                 return false;
             }
             return true;
         }
 
-        function openGameModal(title, content) {
-            document.getElementById('gameContent').innerHTML = `<h3>${title}</h3>${content}`;
-            document.getElementById('gameModal').style.display = 'block';
-        }
+        function updateLeaderboard() {
+            const leaderboardBody = document.getElementById('leaderboard-body');
+            leaderboardBody.innerHTML = '';
+            
+            // Convert users object to an array and sort by ecoPoints
+            const sortedUsers = Object.values(users)
+                .map(user => user.state)
+                .sort((a, b) => b.ecoPoints - a.ecoPoints);
 
-        function closeGame() {
-            document.getElementById('gameModal').style.display = 'none';
-            // Reset Recycling Game state
-            currentItemIndex = 0;
-            correctDrops = 0;
-            // Reset Forest Game state (not strictly needed but good practice)
-            treesPlanted = 0;
-            // Reset Solar Game state
-            housesPowered = 0;
+            sortedUsers.forEach((state, index) => {
+                const rank = index + 1;
+                const row = leaderboardBody.insertRow();
+                if (state.username === loggedInUser) {
+                    row.classList.add('user-rank');
+                }
+                
+                row.insertCell().textContent = rank;
+                row.insertCell().innerHTML = `<span style="font-size: 1.2rem;">${state.avatar}</span> ${state.username}`;
+                row.insertCell().textContent = state.ecoPoints;
+            });
         }
 
         function showSection(sectionId) {
@@ -1429,13 +1387,21 @@
                 section.style.display = 'none';
             });
             document.getElementById(sectionId).style.display = 'block';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            if (sectionId === 'profile' && !loggedInUser) {
+                document.getElementById('profile-content').style.display = 'none';
+                document.getElementById('login-prompt').style.display = 'block';
+            }
+            
+            if (sectionId === 'leaderboard') {
+                updateLeaderboard();
+            }
         }
 
         function startAdventure() {
-            showSection('quests');
+            showSection('levels');
         }
-
+        
         function showNotification(message, duration = 3000) {
             const notification = document.getElementById('notification');
             notification.textContent = message;
@@ -1444,429 +1410,340 @@
                 notification.classList.remove('show');
             }, duration);
         }
+        
+        function triggerCelebration() {
+            const celebration = document.getElementById('celebration');
+            const confettiColors = ['#FF6B35', '#4CAF50', '#764ba2', '#FFD700', '#2E8B57'];
+            const confettiShapes = ['●', '■', '▲', '★', '🎊'];
+            
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.textContent = confettiShapes[Math.floor(Math.random() * confettiShapes.length)];
+                confetti.style.color = confettiColors[Math.floor(Math.random() * confettiColors.length)];
+                confetti.style.left = Math.random() * 100 + 'vw';
+                confetti.style.animationDelay = Math.random() * 2 + 's';
+                confetti.style.animationDuration = (2 + Math.random() * 2) + 's';
+                celebration.appendChild(confetti);
+            }
+
+            setTimeout(() => {
+                celebration.innerHTML = '';
+            }, 5000);
+        }
+
+        // --- GAME LOGIC: RECYCLING HERO ---
+        
+        let currentItems = [];
+        let score = 0;
+        let totalItems = 0;
+        const maxItems = 10;
+        const wasteData = [
+            { item: 'Plastic Bottle 🧴', type: 'Plastic', emoji: '🧴' },
+            { item: 'Aluminum Can 🥫', type: 'Metal', emoji: '🥫' },
+            { item: 'Newspaper 📰', type: 'Paper', emoji: '📰' },
+            { item: 'Apple Core 🍎', type: 'Compost', emoji: '🍎' },
+            { item: 'Glass Jar 🍾', type: 'Glass', emoji: '🍾' },
+            { item: 'Cardboard Box 📦', type: 'Paper', emoji: '📦' },
+            { item: 'Tin Foil ✨', type: 'Metal', emoji: '✨' },
+            { item: 'Banana Peel 🍌', type: 'Compost', emoji: '🍌' },
+            { item: 'Old Shoe 👟', type: 'Trash', emoji: '👟' },
+            { item: 'Yogurt Cup 🥛', type: 'Plastic', emoji: '🥛' },
+        ];
+        
+        const binMap = {
+            'Plastic Bin': 'Plastic',
+            'Paper Bin': 'Paper',
+            'Glass Bin': 'Glass',
+            'Metal Bin': 'Metal',
+            'Compost Bin': 'Compost',
+            'Trash Bin': 'Trash'
+        };
+
+        function startRecyclingGame() {
+            document.getElementById('gameModal').style.display = 'block';
+            document.getElementById('gameModal').classList.add('recycling-hero-game');
+            score = 0;
+            totalItems = 0;
+            currentItems = [];
+            
+            const gameContent = document.getElementById('gameContent');
+            gameContent.innerHTML = `
+                <h2>♻️ Recycling Hero Mission ♻️</h2>
+                <div class="game-area">
+                    <div class="recycling-bins">
+                        <div class="bin" data-type="Plastic" id="bin-plastic" ondragover="dragOver(event)" ondrop="drop(event)">
+                            <div class="bin-icon">🧴</div>
+                            <div class="bin-label">Plastic Bin</div>
+                        </div>
+                        <div class="bin" data-type="Paper" id="bin-paper" ondragover="dragOver(event)" ondrop="drop(event)">
+                            <div class="bin-icon">📰</div>
+                            <div class="bin-label">Paper Bin</div>
+                        </div>
+                        <div class="bin" data-type="Glass" id="bin-glass" ondragover="dragOver(event)" ondrop="drop(event)">
+                            <div class="bin-icon">🍾</div>
+                            <div class="bin-label">Glass Bin</div>
+                        </div>
+                        <div class="bin" data-type="Metal" id="bin-metal" ondragover="dragOver(event)" ondrop="drop(event)">
+                            <div class="bin-icon">🥫</div>
+                            <div class="bin-label">Metal Bin</div>
+                        </div>
+                        <div class="bin" data-type="Compost" id="bin-compost" ondragover="dragOver(event)" ondrop="drop(event)">
+                            <div class="bin-icon">🍎</div>
+                            <div class="bin-label">Compost Bin</div>
+                        </div>
+                        <div class="bin" data-type="Trash" id="bin-trash" ondragover="dragOver(event)" ondrop="drop(event)">
+                            <div class="bin-icon">🗑️</div>
+                            <div class="bin-label">Trash Bin</div>
+                        </div>
+                    </div>
+                    <h3 style="margin-top: 1rem;">Score: <span id="recycling-score">0</span> / ${maxItems}</h3>
+                    <div id="item-prompt" style="font-size: 1.2rem; margin-top: 1rem; font-weight: bold; color: #555;">Drag and drop the waste item into the correct bin!</div>
+                    <div id="draggable-items" class="draggable-items"></div>
+                </div>
+            `;
+            generateNewItem();
+        }
+
+        function generateNewItem() {
+            if (totalItems >= maxItems) {
+                endRecyclingGame();
+                return;
+            }
+            totalItems++;
+            
+            const itemContainer = document.getElementById('draggable-items');
+            itemContainer.innerHTML = ''; // Clear previous item
+            
+            const availableItems = wasteData.filter(wd => !currentItems.some(ci => ci.item === wd.item));
+            if (availableItems.length === 0) {
+                 // Reset if all items have been used (not strictly needed with maxItems but good for small pools)
+                currentItems = [];
+                const randomIndex = Math.floor(Math.random() * wasteData.length);
+                const itemData = wasteData[randomIndex];
+            }
+            
+            const randomIndex = Math.floor(Math.random() * availableItems.length);
+            const itemData = availableItems[randomIndex];
+
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'draggable-item';
+            itemDiv.setAttribute('draggable', true);
+            itemDiv.setAttribute('data-type', itemData.type);
+            itemDiv.id = `item-${totalItems}`;
+            itemDiv.textContent = `${itemData.item}`;
+            
+            itemDiv.addEventListener('dragstart', dragStart);
+            itemDiv.addEventListener('dragend', dragEnd);
+
+            itemContainer.appendChild(itemDiv);
+            currentItems.push(itemData); // Track the current item
+            
+            document.getElementById('item-prompt').textContent = `Item ${totalItems} of ${maxItems}: Drag the ${itemData.item} to the correct bin.`;
+        }
+        
+        function dragStart(e) {
+            e.dataTransfer.setData('text/plain', e.target.id);
+            e.target.classList.add('dragging');
+            
+            // Highlight correct bin for user help 
+            const itemType = e.target.dataset.type;
+            document.querySelectorAll('.bin').forEach(bin => {
+                if (bin.dataset.type === itemType) {
+                    bin.classList.add('highlight');
+                }
+            });
+        }
+        
+        function dragOver(e) {
+            e.preventDefault();
+            // Optional: visual cue on hover over bin
+        }
+        
+        function drop(e) {
+            e.preventDefault();
+            const itemId = e.dataTransfer.getData('text/plain');
+            const itemElement = document.getElementById(itemId);
+            const itemType = itemElement.dataset.type;
+            
+            // Find the bin element that received the drop
+            let dropTarget = e.target;
+            // Traverse up to find the element with class 'bin' if necessary
+            while (dropTarget && !dropTarget.classList.contains('bin')) {
+                dropTarget = dropTarget.parentNode;
+            }
+
+            if (dropTarget && dropTarget.classList.contains('bin')) {
+                const binType = dropTarget.dataset.type;
+                checkAnswer(itemElement, itemType, binType, dropTarget);
+            }
+            
+            document.querySelectorAll('.bin').forEach(bin => {
+                bin.classList.remove('highlight');
+            });
+        }
+        
+        function dragEnd(e) {
+            e.target.classList.remove('dragging');
+        }
+
+        function checkAnswer(itemElement, itemType, binType, binElement) {
+            if (itemType === binType) {
+                // Correct answer
+                score++;
+                document.getElementById('recycling-score').textContent = score;
+                showNotification('✅ Correct! Good job recycling.', 1500);
+                binElement.classList.add('success-animation');
+                itemElement.remove();
+                setTimeout(() => binElement.classList.remove('success-animation'), 500);
+                
+                // Add points and update progress
+                addEcoPoints(10);
+                updateQuestProgress('RecyclingHero', (score / maxItems) * 100);
+
+            } else {
+                // Wrong answer
+                showNotification(`❌ Incorrect. A ${itemType} item goes in the ${itemType} bin. Try again!`, 3000);
+                // Optionally move item back or penalize
+            }
+            
+            // Check if game continues
+            if (totalItems < maxItems) {
+                setTimeout(generateNewItem, 500);
+            } else if (totalItems === maxItems) {
+                endRecyclingGame();
+            }
+        }
+
+        function endRecyclingGame() {
+            closeGame();
+            const finalScore = score;
+            const finalMessage = `Mission Complete! You scored ${finalScore} out of ${maxItems}.`;
+            showNotification(finalMessage, 5000);
+            
+            // Unlock badge if criterion met
+            if (finalScore >= 8) {
+                unlockBadge('recycling-novice');
+                triggerCelebration();
+            }
+            
+            // Final progress update
+            updateQuestProgress('RecyclingHero', 100, true);
+            gameState.questsCompleted++; // Increment quest count on completion
+            saveProgress();
+            updateUI();
+        }
+
+        function closeGame() {
+            document.getElementById('gameModal').style.display = 'none';
+        }
+        
+        // --- END GAME LOGIC ---
+
+        function startForestGame() {
+            showNotification('🌳 Forest Guardian game coming soon!', 3000);
+        }
+
+        function startSolarGame() {
+            showNotification('☀️ Solar City Builder game coming soon!', 3000);
+        }
+
+        function showClimateChangeInfo() {
+            document.getElementById('gameModal').style.display = 'block';
+            document.getElementById('gameContent').innerHTML = `
+                <div class="learning-content">
+                    <h3>Climate Change Basics 🌍</h3>
+                    <p>Climate change is a long-term shift in global or regional climate patterns. The primary driver is the increase in greenhouse gases in Earth's atmosphere due to human activities, mainly the burning of fossil fuels.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/P-DkKqVqL_c" allowfullscreen></iframe>
+                    </div>
+                    <h4>Key Facts:</h4>
+                    <ul>
+                        <li>The average global temperature has increased by about 1.1°C since the late 19th century.</li>
+                        <li>Greenhouse gases like Carbon Dioxide (CO2), Methane (CH4), and Nitrous Oxide (N2O) trap heat, causing the greenhouse effect.</li>
+                        <li>Effects include rising sea levels, extreme weather events, and changes in animal migration patterns.</li>
+                    </ul>
+                    <button class="cta-button" onclick="closeGame()" style="margin-top: 1.5rem;">Got It!</button>
+                </div>
+            `;
+        }
+
+        function showWildlifeInfo() {
+            document.getElementById('gameModal').style.display = 'block';
+            document.getElementById('gameContent').innerHTML = `
+                <div class="learning-content">
+                    <h3>Wildlife Conservation 🐼</h3>
+                    <p>Wildlife conservation is the practice of protecting animal species and their habitats. Threats include habitat destruction, poaching, and climate change.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/7wR7xV2P0xM" allowfullscreen></iframe>
+                    </div>
+                    <h4>How you can help:</h4>
+                    <ul>
+                        <li>Reduce, reuse, and recycle to limit landfill waste and pollution.</li>
+                        <li>Support organizations that protect wildlife habitats.</li>
+                        <li>Plant native trees and flowers to support local ecosystems.</li>
+                    </ul>
+                    <button class="cta-button" onclick="closeGame()" style="margin-top: 1.5rem;">Got It!</button>
+                </div>
+            `;
+        }
+        
+        function showOceanInfo() {
+            document.getElementById('gameModal').style.display = 'block';
+            document.getElementById('gameContent').innerHTML = `
+                <div class="learning-content">
+                    <h3>Ocean Protection 🌊</h3>
+                    <p>Our oceans cover over 70% of the Earth’s surface and are vital for life. They are threatened by plastic pollution, overfishing, and acidification.</p>
+                    <div class="video-container">
+                        <iframe src="https://www.youtube.com/embed/6DxGmiV9gQ0" allowfullscreen></iframe>
+                    </div>
+                    <h4>The Problem of Plastic:</h4>
+                    <ul>
+                        <li>Millions of tons of plastic enter the ocean every year.</li>
+                        <li>Plastic breaks down into microplastics, which are consumed by marine life.</li>
+                        <li>The Great Pacific Garbage Patch is a massive accumulation of marine debris in the North Pacific Ocean.</li>
+                    </ul>
+                    <button class="cta-button" onclick="closeGame()" style="margin-top: 1.5rem;">Got It!</button>
+                </div>
+            `;
+        }
+
 
         function addEcoPoints(points) {
             gameState.ecoPoints += points;
             saveProgress();
             updateUI();
+            showNotification(`+${points} Eco-Points! 🌟`, 1500);
         }
 
-        function addQuestCompleted() {
-            gameState.questsCompleted += 1;
+        function unlockBadge(badgeKey) {
+            if (!gameState.unlockedBadges.includes(badgeKey)) {
+                gameState.unlockedBadges.push(badgeKey);
+                saveProgress();
+                updateUI();
+                showNotification(`🏅 New Badge Unlocked: ${document.querySelector(`.badge[data-badge="${badgeKey}"] .badge-name`).textContent}!`, 5000);
+            }
+        }
+        
+        function updateQuestProgress(questName, percentage, isComplete = false) {
+            gameState.questProgress[questName] = percentage;
+            
+            if (isComplete && percentage === 100) {
+                 // Prevent re-incrementing on subsequent loads
+                 if (gameState.questsCompleted === undefined || isNaN(gameState.questsCompleted)) {
+                     gameState.questsCompleted = 0;
+                 }
+            }
             saveProgress();
             updateUI();
         }
-        
-        function unlockBadge(badgeId) {
-            if (!gameState.unlockedBadges.includes(badgeId)) {
-                gameState.unlockedBadges.push(badgeId);
-                gameState.badgesEarned = gameState.unlockedBadges.length;
-                saveProgress();
-                updateUI();
-                const badgeElement = document.querySelector(`[data-badge="${badgeId}"]`);
-                if (badgeElement) {
-                    showNotification(`🏅 Badge Unlocked: ${badgeElement.querySelector('.badge-name').textContent}!`, 3000);
-                }
-            }
-        }
 
-        function celebrate() {
-            const celebration = document.getElementById('celebration');
-            const confettiEmojis = ['✨', '🌟', '🎉', '🎊', '🥳', '🎈'];
-            
-            for (let i = 0; i < 50; i++) {
-                const confetti = document.createElement('div');
-                confetti.className = 'confetti';
-                confetti.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
-                confetti.style.left = Math.random() * 100 + 'vw';
-                confetti.style.animationDuration = Math.random() * 2 + 3 + 's';
-                confetti.style.animationDelay = Math.random() * 0.5 + 's';
-                celebration.appendChild(confetti);
-            }
-            
-            setTimeout(() => {
-                celebration.innerHTML = '';
-            }, 5000);
-        }
-        
-        // --- Learn Section Modals (Stubbed with content) ---
-        function showClimateChangeInfo() {
-            const content = `
-                <div class="learning-content">
-                    <h3>What is Climate Change? 🌍</h3>
-                    <p>Climate change is the long-term shift in temperatures and weather patterns. While some changes are natural, the current rapid warming is largely caused by human activities, primarily from burning fossil fuels like coal, oil, and gas, which release **greenhouse gases** (like Carbon Dioxide) into the atmosphere.</p>
-                    
-                    <h4>How We Can Help:</h4>
-                    <ul>
-                        <li>**Reduce Energy Use:** Turn off lights and unplug electronics.</li>
-                        <li>**Use Public Transport:** Walk, bike, or take the bus instead of driving.</li>
-                        <li>**Support Renewable Energy:** Advocate for solar and wind power.</li>
-                    </ul>
-                    
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/gqR1R67kH9o" allowfullscreen></iframe>
-                    </div>
-                </div>
-            `;
-            openGameModal('📚 Climate Change Basics', content);
-        }
-        
-        function showWildlifeInfo() {
-             const content = `
-                <div class="learning-content">
-                    <h3>Protecting Our Wild Friends 🐼</h3>
-                    <p>Wildlife conservation is the practice of protecting animal species and their habitats. Many species are becoming endangered due to habitat loss (deforestation), pollution, and climate change.</p>
-                    
-                    <h4>Simple Actions You Can Take:</h4>
-                    <ul>
-                        <li>**Reduce Plastic:** Keep plastics out of oceans and forests.</li>
-                        <li>**Plant Native Species:** Grow plants that local insects and animals rely on.</li>
-                        <li>**Support Sanctuaries:** Support organizations that protect wildlife habitats.</li>
-                    </ul>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/N0y7eXvjYkQ" allowfullscreen></iframe>
-                    </div>
-                </div>
-            `;
-            openGameModal('📚 Wildlife Conservation', content);
-        }
-        
-        function showOceanInfo() {
-             const content = `
-                <div class="learning-content">
-                    <h3>Deep Dive: Ocean Protection 🌊</h3>
-                    <p>Our oceans cover over 70% of the Earth and are vital for life. They absorb massive amounts of CO2, but face severe threats from plastic pollution, oil spills, and overfishing, which disrupt fragile marine ecosystems like coral reefs.</p>
-                    
-                    <h4>Be an Ocean Hero:</h4>
-                    <ul>
-                        <li>**Choose Sustainable Seafood:** Look for products from sustainable fisheries.</li>
-                        <li>**Organize Beach Cleanups:** Participate in local cleanups.</li>
-                        <li>**Avoid Single-Use Plastics:** Every plastic bag you skip helps the sea!</li>
-                    </ul>
-                    <div class="video-container">
-                        <iframe src="https://www.youtube.com/embed/B8Xb1_5D42g" allowfullscreen></iframe>
-                    </div>
-                </div>
-            `;
-            openGameModal('📚 Ocean Protection', content);
-        }
-        
-        // --- GAME LOGIC START ---
-
-        // ** RECYCLING HERO QUEST (Drag and Drop) **
-        const recyclingItems = [
-            { item: 'Plastic Bottle', type: 'Plastic' },
-            { item: 'Newspaper', type: 'Paper' },
-            { item: 'Glass Jar', type: 'Glass' },
-            { item: 'Banana Peel', type: 'Organic' },
-            { item: 'Aluminium Can', type: 'Metal' },
-            { item: 'Cardboard Box', type: 'Paper' },
-            { item: 'Yogurt Cup', type: 'Plastic' }
-        ];
-        const recyclingBins = {
-            'Plastic': { label: 'Plastic', icon: '♳', color: '#FFEB3B' },
-            'Paper': { label: 'Paper', icon: '📰', color: '#2196F3' },
-            'Glass': { label: 'Glass', icon: '🍾', color: '#4CAF50' },
-            'Organic': { label: 'Organic', icon: '🍎', color: '#795548' },
-            'Metal': { label: 'Metal', icon: '🔩', color: '#9E9E9E' }
-        };
-        let currentItemIndex = 0;
-        let correctDrops = 0;
-        let totalItems = 5; // The number of items the user needs to sort to pass
-        let dragItem = null;
-
-        function startRecyclingGame() {
-            currentItemIndex = 0;
-            correctDrops = 0;
-            initializeRecyclingGame();
-        }
-
-        function initializeRecyclingGame() {
-            const gameContent = `
-                <p>Drag the item to the correct bin! Correctly sort ${totalItems} items to complete the quest.</p>
-                <div class="progress-container" style="width: 80%; margin: 1rem auto;">
-                    <div id="recycling-progress-bar" class="progress-bar" style="width: 0%">0/${totalItems}</div>
-                </div>
-                <div id="item-to-sort" style="font-size: 2.5rem; font-weight: bold; margin: 2rem 0;"></div>
-                <div id="recycling-bins" class="recycling-bins">
-                    ${Object.keys(recyclingBins).map(type => `
-                        <div class="bin" data-type="${type}" ondragover="event.preventDefault()" ondrop="handleDrop(event)">
-                            <span class="bin-icon" style="color: ${recyclingBins[type].color};">${recyclingBins[type].icon}</span>
-                            <span class="bin-label">${recyclingBins[type].label}</span>
-                        </div>
-                    `).join('')}
-                </div>
-                <div id="draggable-item-container" class="draggable-items"></div>
-            `;
-            openGameModal('♻️ Recycling Hero Quest', gameContent);
-            loadNextRecyclingItem();
-
-            // Re-attach drop listeners (important for dynamic content)
-            document.querySelectorAll('.bin').forEach(bin => {
-                bin.addEventListener('dragover', (e) => e.preventDefault());
-                bin.addEventListener('drop', handleDrop);
-                bin.addEventListener('dragenter', (e) => bin.classList.add('highlight'));
-                bin.addEventListener('dragleave', (e) => bin.classList.remove('highlight'));
-            });
-        }
-
-        function loadNextRecyclingItem() {
-            if (correctDrops >= totalItems) {
-                completeRecyclingQuest();
-                return;
-            }
-
-            // Cycle through items, but limit to totalItems completions
-            const item = recyclingItems[currentItemIndex % recyclingItems.length];
-            document.getElementById('item-to-sort').textContent = item.item;
-
-            const container = document.getElementById('draggable-item-container');
-            container.innerHTML = `
-                <div class="draggable-item" draggable="true" data-type="${item.type}">
-                    ${item.item}
-                </div>
-            `;
-            dragItem = container.querySelector('.draggable-item');
-            dragItem.addEventListener('dragstart', handleDragStart);
-
-            // Increment index for the next item
-            currentItemIndex++;
-        }
-
-        function handleDragStart(e) {
-            e.dataTransfer.setData('text/plain', e.target.dataset.type);
-            e.target.classList.add('dragging');
-        }
-
-        function handleDrop(e) {
-            e.preventDefault();
-            const itemType = e.dataTransfer.getData('text/plain');
-            const binType = e.currentTarget.dataset.type;
-            const binElement = e.currentTarget;
-
-            // Remove dragging class from the item and highlight from the bin
-            const itemElement = document.getElementById('draggable-item-container').querySelector('.draggable-item');
-            if(itemElement) itemElement.classList.remove('dragging');
-            binElement.classList.remove('highlight');
-
-            if (itemType === binType) {
-                correctDrops++;
-                showNotification(`✅ Correct! You recycled the ${itemType} item.`, 1500);
-                binElement.classList.add('success-animation');
-                setTimeout(() => binElement.classList.remove('success-animation'), 500);
-
-                // Update progress bar
-                const progressBar = document.getElementById('recycling-progress-bar');
-                const percentage = (correctDrops / totalItems) * 100;
-                progressBar.style.width = `${percentage}%`;
-                progressBar.textContent = `${correctDrops}/${totalItems}`;
-
-                // Remove the dragged item
-                document.getElementById('draggable-item-container').innerHTML = '';
-
-                loadNextRecyclingItem();
-            } else {
-                showNotification(`❌ Incorrect! A ${itemType} item does not go into the ${binType} bin. Try again.`, 2000);
-                // The draggable item is still there, user can try again
-            }
-        }
-
-        function completeRecyclingQuest() {
-            addEcoPoints(50);
-            showNotification('🥳 Quest Completed! You earned the Recycling Novice badge!', 4000);
-            unlockBadge('recycling-novice');
-            addQuestCompleted();
-            celebrate();
-            // Clear all event listeners on bins to prevent multiple triggers after game over
-            document.querySelectorAll('.bin').forEach(bin => {
-                bin.removeEventListener('drop', handleDrop);
-                bin.removeEventListener('dragover', (e) => e.preventDefault());
-                bin.removeEventListener('dragenter', (e) => bin.classList.add('highlight'));
-                bin.removeEventListener('dragleave', (e) => bin.classList.remove('highlight'));
-            });
-            setTimeout(closeGame, 2000);
-        }
-        
-        // ** FOREST GUARDIAN QUEST (Click to Plant) **
-        let treesPlanted = 0;
-        const totalTrees = 10;
-        const forestGridSize = 25; // 5x5 grid
-
-        function startForestGame() {
-            treesPlanted = 0;
-            openGameModal('🌳 Forest Guardian Quest', '<h3>Plant the Trees!</h3><p>Click on the empty spots (x) to plant new trees (🌳) and save the forest! Plant 10 trees to complete the quest.</p><div id="forest-game-area" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 300px; margin: 20px auto;"></div><p id="trees-planted-count">Trees Planted: 0/10</p>');
-            initializeForestGame();
-        }
-
-        function initializeForestGame() {
-            const forestArea = document.getElementById('forest-game-area');
-            forestArea.innerHTML = '';
-            
-            for (let i = 0; i < forestGridSize; i++) {
-                const spot = document.createElement('div');
-                spot.style.width = '50px';
-                spot.style.height = '50px';
-                spot.style.border = '2px dashed #8BC34A';
-                spot.style.borderRadius = '5px';
-                spot.style.cursor = 'pointer';
-                spot.style.display = 'flex';
-                spot.style.alignItems = 'center';
-                spot.style.justifyContent = 'center';
-                spot.style.fontSize = '2rem';
-                spot.textContent = 'x'; // Placeholder for an empty spot
-                spot.onclick = plantTree;
-                forestArea.appendChild(spot);
-            }
-            updateForestStatus();
-        }
-
-        function plantTree(event) {
-            if (treesPlanted < totalTrees && event.target.textContent === 'x') {
-                event.target.textContent = '🌳';
-                event.target.style.border = 'none';
-                event.target.style.background = 'none';
-                event.target.onclick = null; // Prevent planting another tree on the same spot
-                treesPlanted++;
-                updateForestStatus();
-                showNotification('💚 Tree planted!', 1000);
-                
-                if (treesPlanted === totalTrees) {
-                    completeForestQuest();
-                }
-            }
-        }
-
-        function updateForestStatus() {
-            document.getElementById('trees-planted-count').textContent = `Trees Planted: ${treesPlanted}/${totalTrees}`;
-        }
-
-        function completeForestQuest() {
-            addEcoPoints(75);
-            showNotification('🎉 Quest Completed! You earned the Tree Planter badge!', 4000);
-            unlockBadge('tree-planter');
-            addQuestCompleted();
-            celebrate();
-            setTimeout(closeGame, 2000);
-        }
-
-        // ** SOLAR CITY BUILDER QUEST (Drag and Drop) **
-        let housesPowered = 0;
-        const totalHouses = 3;
-
-        function startSolarGame() {
-            housesPowered = 0;
-            openGameModal('☀️ Solar City Builder', '<h3>Power Up the City!</h3><p>Drag solar panels onto the rooftops of the three houses to power the city. (Drag & Drop)</p><div id="solar-game-area" style="padding: 2rem; text-align: center;"><div id="houses-container" style="display: flex; justify-content: space-around; margin-bottom: 2rem;"></div><div id="panels-container" style="display: flex; justify-content: center; gap: 1rem;"></div><p id="solar-status">Houses Powered: 0/3</p></div>');
-            initializeSolarGame();
-        }
-
-        function initializeSolarGame() {
-            const housesContainer = document.getElementById('houses-container');
-            const panelsContainer = document.getElementById('panels-container');
-            housesContainer.innerHTML = '';
-            panelsContainer.innerHTML = '';
-
-            // Create houses (drop zones)
-            for (let i = 1; i <= totalHouses; i++) {
-                const house = document.createElement('div');
-                house.className = 'bin'; // Reusing bin style for drop zone
-                house.style.width = '120px';
-                house.style.height = '120px';
-                house.style.border = '3px dashed #FF9800';
-                house.style.borderRadius = '10px';
-                house.style.margin = '0 10px';
-                house.dataset.houseId = i;
-                house.dataset.powered = 'false';
-                house.innerHTML = '<span class="bin-icon">🏠</span><span class="bin-label">House ' + i + '</span>';
-                
-                // Add drag/drop listeners
-                house.addEventListener('dragover', (e) => e.preventDefault());
-                house.addEventListener('drop', handleSolarDrop);
-                house.addEventListener('dragenter', (e) => house.classList.add('highlight'));
-                house.addEventListener('dragleave', (e) => house.classList.remove('highlight'));
-                
-                housesContainer.appendChild(house);
-            }
-
-            // Create solar panels (draggable items)
-            for (let i = 0; i < totalHouses; i++) {
-                const panel = document.createElement('div');
-                panel.className = 'draggable-item';
-                panel.textContent = '☀️ Solar Panel';
-                panel.dataset.panelId = i;
-                panel.draggable = true;
-                
-                panel.addEventListener('dragstart', handleSolarDragStart);
-                panelsContainer.appendChild(panel);
-            }
-            updateSolarStatus();
-        }
-
-        function handleSolarDragStart(e) {
-            e.dataTransfer.setData('text/plain', 'solar-panel');
-            e.target.dataset.draggedId = e.target.dataset.panelId; // Store unique ID
-            e.target.classList.add('dragging');
-        }
-
-        function handleSolarDrop(e) {
-            e.preventDefault();
-            const data = e.dataTransfer.getData('text/plain');
-            const houseElement = e.currentTarget;
-            
-            // Remove dragging class from all panels and highlight from the bin
-            document.querySelectorAll('#panels-container .draggable-item').forEach(panel => panel.classList.remove('dragging'));
-            houseElement.classList.remove('highlight');
-
-            if (data === 'solar-panel' && houseElement.dataset.powered === 'false') {
-                houseElement.dataset.powered = 'true';
-                houseElement.style.border = '3px solid #4CAF50';
-                houseElement.innerHTML = '<span class="bin-icon">🏠⚡️</span><span class="bin-label">Powered!</span>';
-                houseElement.classList.add('success-animation');
-                setTimeout(() => houseElement.classList.remove('success-animation'), 500);
-
-                housesPowered++;
-                showNotification(`✅ House ${houseElement.dataset.houseId} powered!`, 1500);
-                
-                // Find and remove the draggable panel that was used
-                const panelsContainer = document.getElementById('panels-container');
-                const panelToRemove = document.querySelector(`[data-panel-id="${e.dataTransfer.getData('draggedId')}"]`);
-                
-                // This is a simplified removal, based on which one the browser "thinks" was dragged
-                const allPanels = panelsContainer.querySelectorAll('.draggable-item');
-                if (allPanels.length > 0) {
-                    allPanels[0].remove();
-                }
-
-                updateSolarStatus();
-                
-                if (housesPowered === totalHouses) {
-                    completeSolarQuest();
-                }
-            } else if (houseElement.dataset.powered === 'true') {
-                showNotification('This house is already powered!', 1500);
-            } else {
-                showNotification('❌ Wrong item. Only solar panels will work!', 1500);
-            }
-        }
-
-        function updateSolarStatus() {
-            document.getElementById('solar-status').textContent = `Houses Powered: ${housesPowered}/${totalHouses}`;
-        }
-
-        function completeSolarQuest() {
-            addEcoPoints(100);
-            showNotification('🌟 Quest Completed! You earned the Energy Saver badge!', 4000);
-            unlockBadge('energy-saver');
-            addQuestCompleted();
-            celebrate();
-            setTimeout(closeGame, 2000);
-        }
-
-
-        // --- Initialization ---
-        document.addEventListener('DOMContentLoaded', (event) => {
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
             loadProgress();
-
-            // Add extra floating elements for visual effect
+            showSection('home');
+            
+            // Add extra floating elements for a more lively effect after a delay
             setTimeout(() => {
                 const floatingContainer = document.querySelector('.floating-elements');
                 const newElements = ['🦋', '🐝', '🌺', '🌸'];
@@ -1893,9 +1770,6 @@
         document.addEventListener('dragend', function() {
             document.querySelectorAll('.bin').forEach(bin => {
                 bin.classList.remove('highlight');
-            });
-            document.querySelectorAll('.draggable-item').forEach(item => {
-                item.classList.remove('dragging');
             });
         });
 
